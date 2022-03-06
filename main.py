@@ -3,7 +3,7 @@ from nextcord.ext import commands
 import os
 
 # Import Bot Token
-from bottoken import BOTTOKEN
+from bottoken import BOT_TOKEN
 
 
 intents = nextcord.Intents.default()
@@ -34,4 +34,4 @@ if __name__ == '__main__':
         bot.load_extension(extension)
 
 
-bot.run(BOTTOKEN)
+bot.run(BOT_TOKEN)
