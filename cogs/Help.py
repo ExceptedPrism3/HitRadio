@@ -3,16 +3,18 @@ from nextcord.ext import commands
 
 class Help(commands.Cog):
 
-    def __int__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
     
     @commands.command()
-    async def helpo(self, ctx):
+    async def help(self, ctx):
         embed = nextcord.Embed(title = "Help Commands", color = 0xFB401B)
-        embed.set_author(name = "HitRadio", url = "https://prism3.me", icon_url = "https://cdn.discordapp.com/attachments/947328978857898016/949764854149959710/HitRadio.png")
-        embed.add_field(name = "Commands", value = "**/join** - Joins your voice channel and plays the Hits.\n\n**/leave** - Leaves your voice channel.\n\n**/vote** - Vote for the Bot.\n\n**/invite** - Invite the Bot to your Server.")
+        embed.add_field(name = "Join", value = "Joins your voice channel and plays the Hits.\n`hr!join`")
+        embed.add_field(name = "Leave", value = "Leaves your voice channel.\n`hr!leave`")
+        embed.add_field(name = "Vote", value = "Vote for the Bot.\n`hr!vote`")
+        embed.add_field(name = "Invite", value = "Invite the Bot to your Server.\n`hr!invite`")
         await ctx.send(embed = embed)
 
 
-def setup(client):
-    client.add_cog(Help(client))
+def setup(bot):
+    bot.add_cog(Help(bot))
