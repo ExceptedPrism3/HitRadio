@@ -1,107 +1,46 @@
-from re import T
-import discord
-from discord.ext import commands
-from discord import FFmpegPCMAudio
+import nextcord
+from nextcord import Interaction
+from nextcord.ext import commands
+import os
 
-# Import the Bot-Token
+# Import Bot Token
+from bottoken import BOTTOKEN
 
 
-intents = discord.Intents.default()
+intents = nextcord.Intents.default()
 intents.members = True
 
-client = commands.Bot(command_prefix = 'hr!', intents = intents)
+client = commands.Bot(command_prefix = '!', intents = intents)
 
 
 @client.event
 async def on_ready():
-    print("The bot has Started!")
-    print("--------------------")
+    await client.change_presence(activity = nextcord.Activity(type = nextcord.ActivityType.listening, name = "HitRadio"))
+    print("The Bot has Started")
+    print("-------------------")
 
 
-@client.command()
-async def helpo(ctx):
-    await ctx.send("/play")
-    await ctx.send("/leave")
-    await ctx.send("/vote")
-    await ctx.send("/invite")
+testServerID = 934424188582780968
 
-@client.command(pass_context = True)
-async def join(ctx):
-    if (ctx.author.voice):
-        channel = ctx.message.author.voice.channel
-        voice = await channel.connect()
-        source = FFmpegPCMAudio('')
-        await ctx.send("I have joined the channel")
-    else:
-        await ctx.send("You must be in a voice channel to run this command.")
-
-@client.command(pass_context = True)
-async def leave(ctx):
-    if (ctx.voice_client):
-        await ctx.guild.voice_client.disconnect()
-        await ctx.send("I have left the voice channel.")
-    else:
-        await ctx.send("I'm not in a voice channel.")
+@client.slash_command(name = "testw", description = "Chi 7aja", guild_ids = [testServerID])
+async def testw(interaction: Interaction):
+    await interaction.response.send_message("Hello, hooman")
 
 
-client.run('')
+
+# initial_extenions = []
 
 
-# import os
-
-# from discord import FFmpegPCMAudio
-# from discord.ext.commands import Bot
-# from dotenv import load_dotenv
-
-# load_dotenv()
-# TOKEN = os.getenv('OTQ5NjI5MzIwMTEwOTQ0MjU2.YiNJOQ.U1JeAWyHZtvWBJzv2kWY5pg9ryE')
-# PREFIX = os.getenv('!')
-
-# client = Bot(command_prefix=list(PREFIX))
+# # Cycle through the cogs folder and look for any file that ends with .py, once found add it to the initial_extenions ArrayList
+# for filename in os.listdir('./cogs'):
+#     if filename.endswith('.py'):
+#         initial_extenions.append("cogs." + filename[:-3])
 
 
-# @client.event
-# async def on_ready():
-#     print('Music Bot Ready')
+# # Once finished cycling through the cogs folder, import whatever in the initial_extenions ArrayList into the main class
+# if __name__ == '__main__':
+#     for extension in initial_extenions:
+#         client.load_extension(extension)
 
 
-# @client.command(aliases=['p', 'pla'])
-# async def play(ctx, url: str = 'http://stream.radioparadise.com/rock-128'):
-#     channel = ctx.message.author.voice.channel
-#     global player
-#     try:
-#         player = await channel.connect()
-#     except:
-#         pass
-#     player.play(FFmpegPCMAudio('http://stream.radioparadise.com/rock-128'))
-
-
-# @client.command(aliases=['s', 'sto'])
-# async def stop(ctx):
-#     player.stop()
-
-
-# client.run(TOKEN)
-
-# from pydoc import cli
-# import discord
-# from discord.ext import commands
-
-
-# client = commands.Bot(command_prefix = '!')
-
-# @client.event
-# async def on_ready():
-#     print("The bot has Started!")
-
-
-# @client.command()
-# async def play(ctx, url_ : str):
-
-#     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name = '🚨Staff-Side🚨')
-#     voice = discord.utils.get(client.voice_clients, guild = ctx.guild)
-#     if not voice.is_connected():
-#         await voiceChannel.connect()
-
-
-# client.run('OTQ5NjI5MzIwMTEwOTQ0MjU2.YiNJOQ.U1JeAWyHZtvWBJzv2kWY5pg9ryE')
+client.run(BOTTOKEN)
