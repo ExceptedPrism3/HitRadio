@@ -13,15 +13,15 @@ class Vote(nextcord.ui.View):
 
 class UI(commands.Cog):
 
-    def __int__(bot, self):
+    def __init__(bot, self):
         self.bot = bot
 
     @commands.command(pass_context = True)
     async def vote(self, ctx):
         view = Vote()
-        ncsdocsembed = nextcord.Embed(title = ':heart: Vote for the Bot', description = ":fast_forward: Tog.gg **|** :arrow_forward: Invite to your Server", color = 0xFB401B)
+        ncsdocsembed = nextcord.Embed(title = ':heart: Vote for the Bot', description = ":arrow_forward: Tog.gg **|** :arrow_forward: Invite to your Server", color = 0xFB401B)
 
-        return await ctx.reply(embed = ncsdocsembed, view = view, delete_after = 60)
+        await ctx.reply(embed = ncsdocsembed, view = view, delete_after = 60)
 
 
 def setup(bot):

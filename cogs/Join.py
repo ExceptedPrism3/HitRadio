@@ -5,7 +5,7 @@ from essentials import STREAM_LINK
 
 class Join(commands.Cog):
 
-    def __int__(self, bot):
+    def __init__(self, bot):
         self.bot = bot
     
     @commands.command(pass_context = True, aliases=['p', 'play'], brief = "Joins your voice channel and play the hits.")

@@ -2,7 +2,7 @@ from nextcord.ext import commands
 
 class Leave(commands.Cog):
 
-    def __int__(self, bot):
+    def __init__(self, bot):
         self.bot = bot
     
     @commands.command(pass_context = True, brief = "Leaves your voice channel.")
