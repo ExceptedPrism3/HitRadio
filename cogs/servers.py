@@ -8,12 +8,11 @@ class Servers(commands.Cog):
     @commands.command()
     async def servers(self, ctx):
         if ctx.author.id == 403667971089760257:
-            try:
-                activeservers = self.bot.guilds
-                for guild in activeservers:
-                    await ctx.send(guild.name)
-            except:
-                await ctx.send('Only the Author can execute this command!')
+            activeservers = self.bot.guilds                
+            for guild in activeservers:
+                await ctx.send(guild.name)
+        else:
+            await ctx.send('Only the Author can execute this command!')
 
 
 def setup(bot):
