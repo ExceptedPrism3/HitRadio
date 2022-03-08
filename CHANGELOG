@@ -16,3 +16,13 @@ Changes
 
 Fixes
     [!] Vote Command not working
+
+
+<-!------------------------------ 1.2.2 ------------------------------!->
+
+Additions
+    [+] Stop command
+
+Changes
+    [*] Re-organized things
+
