@@ -1,12 +1,12 @@
 from nextcord.ext import commands
 
-class Leave(commands.Cog):
+class Pause(commands.Cog):
 
-    def __int__(self, bot):
+    def __init__(self, bot):
         self.bot = bot
-    
-    @commands.command(pass_context = True, brief = "Leaves your voice channel.")
-    async def leave(self, ctx):
+
+    @commands.command(pass_context = True, aliases=['stop', 'hault'], brief = "Pauses the currently playing song.")
+    async def pause(self, ctx):
 
         if ctx.voice_client is None:
             return await ctx.send("I'm not in a voice channel.")
@@ -17,10 +17,12 @@ class Leave(commands.Cog):
         if (ctx.author.voice.channel != ctx.me.voice.channel):
             return await ctx.send('You need to be in ths same voice channel as me to execute this command.')
         
-        if (ctx.voice_client):
-            await ctx.guild.voice_client.disconnect()
-            await ctx.send("I have left the voice channel.")
+        if ctx.voice_client.is_playing():
+            ctx.voice_client.pause()
+            await ctx.send("Radio Stopped.")
+        else:
+            await ctx.send(f"{ctx.author.mention} i'm already paused at the moment!")
 
 
 def setup(bot):
-    bot.add_cog(Leave(bot))
+    bot.add_cog(Pause(bot))

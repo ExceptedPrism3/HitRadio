@@ -1,0 +1,12 @@
+<-!------------------------------ 1.2 ------------------------------!->
+
+Additions
+    [+] Vote command 'hr!vote'
+Fixes
+    [!] Leave command
+    [!] Resume command
+    [!] Leave command
+    [!] Pause command
+Changes
+    [*] Added a new status message
+    [*] Enchanced the code utility

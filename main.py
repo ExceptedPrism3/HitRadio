@@ -1,11 +1,9 @@
-from itertools import cycle
 import nextcord
 from nextcord.ext import commands
-from itertools import cycle
 import os
 
 # Import Bot Token
-from bottoken import BOT_TOKEN
+from essentials import BOT_TOKEN
 
 
 intents = nextcord.Intents.default()
@@ -15,7 +13,6 @@ bot = commands.Bot(command_prefix = 'hr!', intents = intents, help_command = Non
 
 @bot.event
 async def on_ready():
-    # await bot.change_presence(activity = nextcord.Activity(type = nextcord.ActivityType.listening, name = "HitRadio Hits"))
     print("The Bot has Started")
     print("-------------------")
 
