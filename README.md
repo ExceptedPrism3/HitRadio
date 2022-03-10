@@ -1,6 +1,6 @@
 # HitRadio
 
-<img src="https://cdn.discordapp.com/attachments/947328978857898016/951244337990213692/HitRadioReadMe.gif">
+<img src="https://cdn.discordapp.com/attachments/947328978857898016/951591067642372176/HitRadioReadMe.gif">
 
 <br>
 
