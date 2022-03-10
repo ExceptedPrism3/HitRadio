@@ -11,5 +11,8 @@ Join in, and bring the bot with you and relax while listening to your favorite R
 <br>
 
 Execute the `hr!help` command to view all available commands!
-<img src="https://cdn.discordapp.com/attachments/947328978857898016/951247749247037510/unknown.png" align="center">
+
+<p align="center">
+<img src="https://cdn.discordapp.com/attachments/947328978857898016/951247749247037510/unknown.png"/>
+</p>
 
