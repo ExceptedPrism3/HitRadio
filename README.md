@@ -10,7 +10,7 @@ Join in, and bring the bot with you and relax while listening to your favorite R
 
 <br>
 
-You can find this bot <a href="https://top.gg/bot/949629320110944256" target="_blank"><b>here</b></a>, or you can invite it from <a href="https://top.gg/bot/949629320110944256/invite" target="_blank"><b>here</b></a>.
+You can find this bot <a href="https://top.gg/bot/949629320110944256"><b>here</b></a>, or you can invite it from <a href="https://top.gg/bot/949629320110944256/invite"><b>here</b></a>.
 
 <br>
 
