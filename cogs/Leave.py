@@ -5,7 +5,7 @@ class Leave(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command(pass_context = True, brief = "Leaves your voice channel.")
+    @commands.command(pass_context = True, aliases=['quit', '9wd'], brief = "Leaves your voice channel.")
     async def leave(self, ctx):
 
         if ctx.voice_client is None:

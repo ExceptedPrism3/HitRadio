@@ -16,7 +16,7 @@ class UI(commands.Cog):
     def __init__(bot, self):
         self.bot = bot
 
-    @commands.command(pass_context = True)
+    @commands.command(pass_context = True, aliases=['invite'], brief = "Display the vote and invite links.")
     async def vote(self, ctx):
         view = Vote()
         ncsdocsembed = nextcord.Embed(title = ':heart: Vote for the Bot', description = ":arrow_forward: Tog.gg **|** :arrow_forward: Invite to your Server", color = 0xFB401B)

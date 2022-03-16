@@ -5,7 +5,7 @@ class Pause(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(pass_context = True, aliases=['stop', 'hault'], brief = "Pauses the currently playing song.")
+    @commands.command(pass_context = True, aliases=['stop', 'halt'], brief = "Pauses the currently playing song.")
     async def pause(self, ctx):
 
         if ctx.voice_client is None:

@@ -9,7 +9,7 @@ class Join(commands.Cog):
         self.bot = bot
     
     @commands.command(pass_context = True, aliases=['p', 'play'], brief = "Joins your voice channel and play the hits.")
-    async def join(self, ctx,  url: str = STREAM_LINK):
+    async def join(self, ctx):
         if (ctx.voice_client):
             return await ctx.send("I'm already connected to a channel.")
 
