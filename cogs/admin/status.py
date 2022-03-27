@@ -6,7 +6,7 @@ class status(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.status = cycle(['HitRadio Hits', 'MoMo Morning Show', 'Shakira', 'DJ Hmida'])
+        self.status = cycle(['HitRadio Hits', 'MoMo Morning Show', 'Shakira', 'DJ Hmida', 'Martin Garrix', 'David Guetta'])
 
     @tasks.loop(seconds=300.0)
     async def change_status(self):

@@ -1,11 +1,10 @@
 from nextcord.ext import commands
 
 class Resume(commands.Cog):
-
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(pass_context = True, aliases=['continue', 'kml'], brief = "Resumes the paused music.")
+    @commands.command(pass_context = True, aliases=['continue', 'kml'], brief = "Resumes the paused Radio.")
     async def resume(self, ctx):
         
         if ctx.voice_client is None:

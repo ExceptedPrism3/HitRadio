@@ -1,7 +1,6 @@
 from nextcord.ext import commands
 
 class Leave(commands.Cog):
-
     def __init__(self, bot):
         self.bot = bot
     
@@ -17,9 +16,8 @@ class Leave(commands.Cog):
         if (ctx.author.voice.channel != ctx.me.voice.channel):
             return await ctx.send('You need to be in ths same voice channel as me to execute this command.')
         
-        if (ctx.voice_client):
-            await ctx.guild.voice_client.disconnect()
-            await ctx.send("I have left the voice channel.")
+        await ctx.guild.voice_client.disconnect()
+        await ctx.send("I have left the voice channel.")
 
 
 def setup(bot):

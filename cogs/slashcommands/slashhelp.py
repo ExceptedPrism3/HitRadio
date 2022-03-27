@@ -1,12 +1,12 @@
 import nextcord
 from nextcord.ext import commands
 
-class Help(commands.Cog):
+class SlashHelp(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command(pass_context = True, brief = "Displays the help menu.")
-    async def help(self, ctx):
+    @nextcord.slash_command(name = "help", description = "Displays the help menu.")
+    async def help(self, interaction):
         
         embed = nextcord.Embed(title = "Help Commands", color = 0xFB401B)
         embed.add_field(name = "Join", value = "Join your voice channel and plays the Hits.\n`hr!join`")
@@ -15,9 +15,8 @@ class Help(commands.Cog):
         embed.add_field(name = "Leave", value = "Leave your voice channel.\n`hr!leave`")
         embed.add_field(name = "Stop", value = "Stop playing the Hits.\n`hr!stop`")
         embed.add_field(name = "Vote", value = "Display Links of the Bot.\n`hr!vote`")
-        embed.add_field(name = "UpTime", value = "Display the Bot's Uptime.\n`hr!uptime`")
-        await ctx.send(embed = embed)
+        await interaction.send(embed = embed)
 
 
 def setup(bot):
-    bot.add_cog(Help(bot))
+    bot.add_cog(SlashHelp(bot))

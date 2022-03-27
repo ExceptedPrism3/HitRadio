@@ -1,7 +1,6 @@
 from nextcord.ext import commands
 
 class Servers(commands.Cog):
-
     def __init__(self, bot):
         self.bot = bot
 
@@ -14,7 +13,7 @@ class Servers(commands.Cog):
                 await ctx.send(guild.name)
                 i+=1
 
-            await ctx.send('Total Joined Server(s): **{}**'.format(i))
+            await ctx.send("Total Joined Server(s): **{}**".format(i))
 
 
 def setup(bot):

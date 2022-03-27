@@ -4,7 +4,7 @@
 
 <br>
 
-24/7 Moroccan Discord Bot named HitRadio named after the HitRadio Radio Station, you are able to listen to it in real-time your voice channel with your homies.
+24/7 Moroccan Discord Bot named HitRadio named after the **HitRadio** Radio Station, you are able to listen to it in real-time your voice channel with your homies.
 
 Join in, and bring the bot with you and relax while listening to your favorite Radio Station while doing your homework or maybe coding.
 

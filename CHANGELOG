@@ -2,13 +2,13 @@
 
 Additions
     [+] Vote command 'hr!vote'
+    [+] New status message
 Fixes
     [!] Leave command
     [!] Resume command
     [!] Leave command
     [!] Pause command
 Changes
-    [*] Added a new status message
     [*] Enchanced the code utility
 
 
@@ -34,6 +34,17 @@ Additions
 
 Changes
     [*] Admin thing
+    [*] Minor Improvements
+
+
+<-!------------------------------ 1.3 ------------------------------!->
+
+Additions
+    [+] Slash Commands
+    [+] New Status Messages
+    [+] Uptime Command
+
+Changes
     [*] Minor Improvements
 
 

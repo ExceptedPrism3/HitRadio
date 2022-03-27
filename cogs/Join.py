@@ -4,7 +4,6 @@ from nextcord.ext import commands
 from essentials import STREAM_LINK
 
 class Join(commands.Cog):
-
     def __init__(self, bot):
         self.bot = bot
     
@@ -17,7 +16,7 @@ class Join(commands.Cog):
                 channel = ctx.message.author.voice.channel
                 player = await channel.connect()
                 player.play(FFmpegPCMAudio(STREAM_LINK))
-                await ctx.send(f"I have joined the **{ctx.author.voice.channel.mention}** channel.")
+                await ctx.send(f"I have joined the {ctx.author.voice.channel.mention} channel.")
         else:
            await ctx.send("You must be in a voice channel to run this command.")
 
