@@ -1,3 +1,4 @@
+import nextcord
 from nextcord.ext import commands
 from datetime import datetime
 
@@ -12,7 +13,8 @@ class UpTime(commands.Cog):
         hours, remainder = divmod(int(delta_uptime.total_seconds()), 3600)
         minutes, seconds = divmod(remainder, 60)
         days, hours = divmod(hours, 24)
-        await ctx.send(f"{days}d, {hours}h, {minutes}m, {seconds}s")
+        embed = nextcord.Embed(title = "", description= f"**⏰ Uptime: {days}d, {hours}h, {minutes}m, {seconds}s**", color = 0xFB401B)
+        await ctx.send(embed = embed)
 
 
 def setup(bot):
