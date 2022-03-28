@@ -48,3 +48,9 @@ Changes
     [*] Minor Improvements
 
 
+<-!------------------------------ 1.3.1 ------------------------------!->
+
+Fixes
+    [!] Join | Leave | Pause | Resume Slash Commands not working as intended
+
+

@@ -10,7 +10,10 @@ class SlashJoin(commands.Cog):
     
     @nextcord.slash_command(name = "join", description = "Joins your voice channel and play the hits.")
     async def join(self, interaction):
-        if (interaction.client.voice_clients):
+
+        voice_client = nextcord.utils.get(interaction.client.voice_clients, guild=interaction.guild)
+
+        if (voice_client):
             return await interaction.send("I'm already connected to a channel.")
 
         if (interaction.user.voice):

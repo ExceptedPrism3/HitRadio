@@ -8,7 +8,9 @@ class SlashPause(commands.Cog):
     @nextcord.slash_command(name = "pause", description = "Pauses the Radio.")
     async def pause(self, interaction):
 
-        if not interaction.client.voice_clients:
+        voice_client = nextcord.utils.get(interaction.client.voice_clients, guild=interaction.guild)
+
+        if not voice_client:
             return await interaction.send("I'm not in a voice channel.")
 
         if not interaction.user.voice:
