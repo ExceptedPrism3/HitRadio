@@ -7,7 +7,8 @@ class SlashPing(commands.Cog):
     
     @nextcord.slash_command(name = "ping", description = "Shows the Bot's ping.")
     async def ping(self, interaction):
-        return await interaction.send(f'🏓 Pong! **{round(self.bot.latency * 1000)}** ms')
+        await interaction.send('Calculating...')
+        return await interaction.edit_original_message(content=f'🏓 Pong! **{round(self.bot.latency * 1000)}** ms')
 
 
 def setup(bot):
