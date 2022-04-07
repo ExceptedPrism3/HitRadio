@@ -9,7 +9,7 @@ from essentials import BOT_TOKEN
 intents = nextcord.Intents.default()
 intents.members = True
 
-bot = commands.Bot(command_prefix = 'hr!', intents = intents, help_command = None)
+bot = commands.Bot(command_prefix = 'hrt!', intents = intents, help_command = None)
 
 @bot.event
 async def on_ready():

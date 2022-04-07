@@ -14,9 +14,9 @@ You can find this bot <a href="https://top.gg/bot/949629320110944256"><b>here</b
 
 <br>
 
-Execute the `hr!help` command to view all available commands!
+Execute the `hr!help` command or `/help` of the bot to view all available commands!
 
 <p align="center">
-<img src="https://cdn.discordapp.com/attachments/927336267379798037/957795570049773578/Screenshot_2022-03-28_001711.png"/>
+<img src="https://cdn.discordapp.com/attachments/927336267379798037/961528272343150592/unknown.png"/>
 </p>
 

@@ -7,15 +7,15 @@ class SlashHelp(commands.Cog):
     
     @nextcord.slash_command(name = "help", description = "Displays the help menu.")
     async def help(self, interaction):
-        
+    
         embed = nextcord.Embed(title = "Help Commands", color = 0xFB401B)
-        embed.add_field(name = "Join", value = "Join your voice channel and plays the Hits.\n`hr!join`")
-        embed.add_field(name = "Resume", value = "Resume playing hits whens stopped.\n`hr!resume`")
-        embed.add_field(name = "Ping", value = "Check the Bot's Ping.\n`hr!ping`")
-        embed.add_field(name = "Leave", value = "Leave your voice channel.\n`hr!leave`")
-        embed.add_field(name = "Stop", value = "Stop playing the Hits.\n`hr!stop`")
-        embed.add_field(name = "Vote", value = "Display Links of the Bot.\n`hr!vote`")
-        embed.add_field(name = "UpTime", value = "Display the Bot's Uptime.\n`hr!uptime`")
+        embed.add_field(name = "Join", value = "Join your voice channel and plays the Hits.\n`/join`")
+        embed.add_field(name = "Resume", value = "Resume playing hits whens stopped.\n`/resume`")
+        embed.add_field(name = "Ping", value = "Check the Bot's Ping.\n`/ping`")
+        embed.add_field(name = "Leave", value = "Leave your voice channel.\n`/leave`")
+        embed.add_field(name = "Stop", value = "Stop playing the Hits.\n`/stop`")
+        embed.add_field(name = "Vote", value = "Display Links of the Bot.\n`/vote`")
+        embed.add_field(name = "UpTime", value = "Display the Bot's Uptime.\n`/uptime`")
         await interaction.send(embed = embed)
 
 
