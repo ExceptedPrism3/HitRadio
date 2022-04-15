@@ -60,3 +60,15 @@ Changes
     [*] Tiny Changes
 
 
+<-!------------------------------ 1.4 ------------------------------!->
+
+Additions
+    [+] New status Messages
+    [+] On Ping Event which replies to whom pinged the bot
+
+Changes
+    [*] Code Improvements
+
+Removes
+    [-] Removed all prefix commands
+    [-] Remove /uptime command due to a bug

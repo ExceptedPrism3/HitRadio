@@ -2,14 +2,14 @@ import nextcord
 from nextcord.ext import commands
 from nextcord import Interaction
 
-from essentials import INVITE, VOTE
+from essentials import BOT_INVITE, VOTE
 
 class SlashVote(nextcord.ui.View):
     def __init__(self):
         super().__init__()
         self.value = None
         self.add_item(nextcord.ui.Button(label = "Top.gg", url = VOTE, emoji= "💖"))
-        self.add_item(nextcord.ui.Button(label = "Invite", url = INVITE, emoji= "➕"))
+        self.add_item(nextcord.ui.Button(label = "Invite", url = BOT_INVITE, emoji= "➕"))
 
 class SlashUI(commands.Cog):
     def __init__(self, client):

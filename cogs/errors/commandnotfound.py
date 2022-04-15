@@ -1,4 +1,3 @@
-import nextcord
 from nextcord.ext import commands
 
 class ErrorNotFound(commands.Cog):
@@ -8,8 +7,7 @@ class ErrorNotFound(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
-            embed = nextcord.Embed(title = "", description= "Unknown Command, execute `hr!help` for available commands.", color = 0xFB401B)
-            await ctx.send(embed = embed)
+            return
 
 
 def setup(bot):

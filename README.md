@@ -10,13 +10,13 @@ Join in, and bring the bot with you and relax while listening to your favorite R
 
 <br>
 
-You can find this bot <a href="https://top.gg/bot/949629320110944256"><b>here</b></a>, or you can invite it from <a href="https://top.gg/bot/949629320110944256/invite"><b>here</b></a>.
+You can find this bot <a href="https://top.gg/bot/949629320110944256"><b>here</b></a>, or you can invite it from <a href="https://discord.com/api/oauth2/authorize?client_id=949629320110944256&permissions=277028895808&scope=bot%20applications.commands"><b>here</b></a>.
 
 <br>
 
 Execute the `hr!help` command or `/help` of the bot to view all available commands!
 
 <p align="center">
-<img src="https://cdn.discordapp.com/attachments/927336267379798037/961528272343150592/unknown.png"/>
+<img src="https://cdn.discordapp.com/attachments/927336267379798037/964441590657605662/unknown.png"/>
 </p>
 

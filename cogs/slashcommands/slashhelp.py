@@ -15,7 +15,6 @@ class SlashHelp(commands.Cog):
         embed.add_field(name = "Leave", value = "Leave your voice channel.\n`/leave`")
         embed.add_field(name = "Stop", value = "Stop playing the Hits.\n`/stop`")
         embed.add_field(name = "Vote", value = "Display Links of the Bot.\n`/vote`")
-        embed.add_field(name = "UpTime", value = "Display the Bot's Uptime.\n`/uptime`")
         await interaction.send(embed = embed)
 
 

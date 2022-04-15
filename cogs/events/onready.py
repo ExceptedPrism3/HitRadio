@@ -2,11 +2,13 @@ import nextcord
 from nextcord.ext import commands, tasks
 from itertools import cycle
 
+from essentials import BOT_STATUS
+
 class status(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.status = cycle(['HitRadio Hits', 'MoMo Morning Show', 'Shakira', 'DJ Hmida', 'Martin Garrix', 'David Guetta'])
+        self.status = cycle(BOT_STATUS)
 
     @tasks.loop(seconds=300.0)
     async def change_status(self):
@@ -14,6 +16,8 @@ class status(commands.Cog):
         
     @commands.Cog.listener()
     async def on_ready(self):
+        print('HitRadio has Started')
+        print('-------------------')
         await self.bot.wait_until_ready()
         self.change_status.start()
 
