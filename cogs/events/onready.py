@@ -16,9 +16,11 @@ class status(commands.Cog):
         
     @commands.Cog.listener()
     async def on_ready(self):
-        print('HitRadio has Started')
-        print('-------------------')
+        print(self.bot.user, 'has Started')
+        print('--------------------------')
         await self.bot.wait_until_ready()
+        totalServersLine = f'Hits with {len(self.bot.guilds)} servers'
+        BOT_STATUS.append(totalServersLine)
         self.change_status.start()
 
 def setup(bot):

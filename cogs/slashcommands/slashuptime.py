@@ -5,6 +5,7 @@ from datetime import datetime
 class SlashUpTime(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        bot.launch_time = datetime.utcnow()
     
     @nextcord.slash_command(name = "uptime", description = "Shows the Bot's uptime.")
     async def uptime(self, interaction):
@@ -13,6 +14,7 @@ class SlashUpTime(commands.Cog):
         minutes, seconds = divmod(remainder, 60)
         days, hours = divmod(hours, 24)
         embed = nextcord.Embed(description= f"**⏰ Uptime: {days}d, {hours}h, {minutes}m, {seconds}s**", color = 0xFB401B)
+        
         await interaction.send(embed = embed)
 
 

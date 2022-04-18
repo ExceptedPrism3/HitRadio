@@ -14,8 +14,8 @@ class SlashShutDown(commands.Cog):
     @nextcord.slash_command(name = "shutdown", description = "Admin command.", guild_ids = GUILD_ID)
     @application_checks.check(check_if_is_is_me)
     async def shutdown(self, interaction):
-            await interaction.send("Bot Closed!")
-            await self.bot.close()
+        await interaction.send("Bot Closed!")
+        await self.bot.close()
 
 def setup(bot):
     bot.add_cog(SlashShutDown(bot))

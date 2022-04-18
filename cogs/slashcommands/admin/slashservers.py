@@ -14,15 +14,14 @@ class SlashServers(commands.Cog):
     @nextcord.slash_command(name = "servers", description = "Admin command.", guild_ids = GUILD_ID)
     @application_checks.check(check_if_is_is_me)
     async def servers(self, interaction):
-            activeservers = self.bot.guilds
-            list = []
-            i = 0
-            for guild in activeservers:
-                list.append("**" + guild.name + "**")
-                i+=1
+        activeservers = self.bot.guilds
+        list = []
+        i = 0
+        for guild in activeservers:
+            list.append("**" + guild.name + "**")
+            i+=1
 
-            await interaction.send(list)
-            await interaction.send("Total Joined Server(s): **{}**".format(i))
+        return await interaction.send(f'Servers Names: {list}\n\nTotal Servers: **{i}**')
 
 def setup(bot):
     bot.add_cog(SlashServers(bot))

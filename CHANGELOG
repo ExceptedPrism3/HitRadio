@@ -72,3 +72,14 @@ Changes
 Removes
     [-] Removed all prefix commands
     [-] Remove /uptime command due to a bug
+
+
+<-!------------------------------ 1.4.1 ------------------------------!->
+
+Additions
+    [+] /info command that display some information about the Bot
+    [+] new Status Message
+
+Fixes
+    [!] /uptime Command
+

@@ -7,8 +7,14 @@ class SlashPing(commands.Cog):
     
     @nextcord.slash_command(name = "ping", description = "Shows the Bot's ping.")
     async def ping(self, interaction):
-        await interaction.send('Calculating...')
-        return await interaction.edit_original_message(content=f'🏓 Pong! **{round(self.bot.latency * 1000)}** ms')
+
+        embed = nextcord.Embed(title = "Ping", description = "**Calculating...**", color = 0xFB401B)
+
+        await interaction.send(embed = embed)
+
+        embedPing = nextcord.Embed(title = "🏓 Pong", description = f'Bot Latency: **{round(self.bot.latency * 1000)}** ms', color = 0xFB401B)
+
+        return await interaction.edit_original_message(embed = embedPing)
 
 
 def setup(bot):

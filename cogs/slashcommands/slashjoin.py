@@ -17,10 +17,10 @@ class SlashJoin(commands.Cog):
             return await interaction.send("I'm already connected to a channel.")
 
         if (interaction.user.voice):
-                channel = interaction.user.voice.channel
-                player = await channel.connect()
-                player.play(FFmpegPCMAudio(STREAM_LINK))
-                await interaction.send(f"I have joined the {interaction.user.voice.channel.mention} channel.")
+            channel = interaction.user.voice.channel
+            player = await channel.connect()
+            player.play(FFmpegPCMAudio(STREAM_LINK))
+            await interaction.send(f"I have joined the {interaction.user.voice.channel.mention} channel.")
         else:
            await interaction.send("You must be in a voice channel to run this command.")
 

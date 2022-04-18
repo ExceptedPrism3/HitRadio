@@ -21,7 +21,7 @@ class SlashPause(commands.Cog):
         
         if interaction.guild.voice_client.is_playing():
             interaction.guild.voice_client.pause()
-            await interaction.send("Radio Stopped.")
+            await interaction.send("Radio Paused.")
         else:
             await interaction.send(f"{interaction.user.mention} i'm already paused at the moment!")
 
