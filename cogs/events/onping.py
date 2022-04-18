@@ -6,9 +6,10 @@ class OnPing(commands.Cog):
     
     @commands.Cog.listener()
     async def on_message(self, message):
-        
+        if message.author.bot:
+            return
         if str(self.bot.user.id) in message.content:
-            await message.reply('Hi, to view my available commands, execute `/help` of the bot.')
+            return await message.reply('Hi, to view my available commands, execute `/help` of the bot.')
 
 
 def setup(bot):
