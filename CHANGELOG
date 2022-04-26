@@ -83,3 +83,15 @@ Additions
 Fixes
     [!] /uptime Command
 
+
+<-!------------------------------ 1.5 ------------------------------!->
+
+Additions
+    [+] Embed messages on every command to inform the users to migrate to another bot
+
+Changes
+    [*] Minor Changes
+
+Removes
+    [-] Removed all admin commands
+
