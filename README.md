@@ -17,7 +17,7 @@ You can find this bot <a href="https://top.gg/bot/949629320110944256"><b>here</b
 Execute `/help` of the bot to view all available commands!
 
 <p align="center">
-<img src="https://cdn.discordapp.com/attachments/927336267379798037/977267168850870352/unknown.png"/>
+<img src="https://cdn.discordapp.com/attachments/927336267379798037/978711197094412348/unknown.png"/>
 </p>
 
 <br>
