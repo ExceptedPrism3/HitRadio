@@ -1,26 +1,29 @@
-import nextcord
-from nextcord.ext import commands
+from discord.ext import commands
+from discord.commands import slash_command
 
 class SlashLeave(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @nextcord.slash_command(name = "leave", description = "Leaves your voice channel.")
-    async def leave(self, interaction):
+    @slash_command(description = "Leaves your voice channel.")
+    async def leave(self, ctx):
 
-        voice_client = nextcord.utils.get(interaction.client.voice_clients, guild = interaction.guild)
-
-        if not voice_client:
-            return await interaction.send("I'm not in a voice channel.")
-
-        if not interaction.user.voice:
-            return await interaction.send("You need to be in a voice channel to use this command.")
-
-        if (interaction.user.voice.channel != interaction.guild.me.voice.channel):
-            return await interaction.send("You need to be in ths same voice channel as me to execute this command.")
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         
-        await interaction.guild.voice_client.disconnect()
-        return await interaction.send("I have left the voice channel.")
+        if not player:
+            return await ctx.respond("I'm not in a voice channel.", ephemeral = True)
+
+        if not ctx.user.voice:
+            return await ctx.respond("You need to be in a voice channel to use this command.", ephemeral = True)
+
+        if (ctx.user.voice.channel != ctx.guild.me.voice.channel):
+            return await ctx.respond("You need to be in ths same voice channel as me to execute this command.", ephemeral = True)
+        
+        await player.stop()
+
+        await ctx.voice_client.disconnect(force = True)
+
+        return await ctx.respond('I have left the voice channel.', ephemeral = True)
 
 
 def setup(bot):

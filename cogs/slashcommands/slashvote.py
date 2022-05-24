@@ -1,27 +1,27 @@
-import nextcord
-from nextcord.ext import commands
-from nextcord import Interaction
+import discord
+from discord.ext import commands
+from discord.commands import slash_command
 
-from essentials import BOT_INVITE, VOTE
+from private.essentials import BOT_INVITE, VOTE
 
-class SlashVote(nextcord.ui.View):
+class SlashVote(discord.ui.View):
     def __init__(self):
         super().__init__()
         self.value = None
-        self.add_item(nextcord.ui.Button(label = "Top.gg", url = VOTE, emoji= "💖"))
-        self.add_item(nextcord.ui.Button(label = "Invite", url = BOT_INVITE, emoji= "➕"))
+        self.add_item(discord.ui.Button(label = "Top.gg", url = VOTE, emoji= "💖"))
+        self.add_item(discord.ui.Button(label = "Invite", url = BOT_INVITE, emoji= "➕"))
 
 class SlashUI(commands.Cog):
     def __init__(self, client):
         self.client = client
-
-    @nextcord.slash_command(name = "vote", description = "Display the vote and invite links.")
-    async def vote(self, interaction: Interaction):
+        
+    @slash_command(description = "Display the vote and invite links.")
+    async def vote(self, ctx):
 
         view = SlashVote()
-        embed = nextcord.Embed(title = ':heart: Vote for the Bot', description = ":arrow_forward: Tog.gg **|** :arrow_forward: Invite to your Server", color = 0xFB401B)
+        embed = discord.Embed(title = ':heart: Vote for the Bot', description = ":arrow_forward: Tog.gg **|** :arrow_forward: Invite to your Server", color = 0xFB401B)
 
-        return await interaction.response.send_message(embed = embed, view = view, delete_after = 60)
+        return await ctx.respond(embed = embed, view = view, ephemeral = True)
 
 def setup(client):
     client.add_cog(SlashUI(client))

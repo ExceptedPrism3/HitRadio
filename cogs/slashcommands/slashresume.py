@@ -1,29 +1,29 @@
-import nextcord
-from nextcord.ext import commands
+from discord.ext import commands
+from discord.commands import slash_command
 
 class SlashResume(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @nextcord.slash_command(name = "resume", description = "Resumes the paused Radio.")
-    async def resume(self, interaction):
+    @slash_command(description = "Resumes the paused Radio.")
+    async def resume(self, ctx):
 
-        voice_client = nextcord.utils.get(interaction.client.voice_clients, guild = interaction.guild)
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
 
-        if not voice_client:
-            return await interaction.send("I'm not in a voice channel.")
+        if not player:
+            return await ctx.respond("I'm not in a voice channel.", ephemeral = True)
 
-        if not interaction.user.voice:
-            return await interaction.send("You need to be in a voice channel to use this command.")
+        if not ctx.user.voice:
+            return await ctx.respond("You need to be in a voice channel to use this command.", ephemeral = True)
 
-        if (interaction.user.voice.channel != interaction.guild.me.voice.channel):
-            return await interaction.send("You need to be in ths same voice channel as me to execute this command.")
+        if (ctx.user.voice.channel != ctx.guild.me.voice.channel):
+            return await ctx.respond("You need to be in ths same voice channel as me to execute this command.", ephemeral = True)
 
-        if interaction.guild.voice_client.is_paused():
-            interaction.guild.voice_client.resume()
-            return await interaction.send("Radio Resuming...")
-        else:
-            return await interaction.send(f"{interaction.user.mention} I'm already playing the Hits!")
+        if player.paused:
+            await player.set_pause(False)
+            return await ctx.respond("Radio Resuming...", ephemeral = True)
+        elif not player.paused:
+            return await ctx.respond(f"{ctx.user.mention} I'm already playing the Hits!", ephemeral = True)
 
 
 def setup(bot):

@@ -1,4 +1,4 @@
-from nextcord.ext import commands
+from discord.ext import commands
 
 class OnPing(commands.Cog):
     def __init__(self, bot):

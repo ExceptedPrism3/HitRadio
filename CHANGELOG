@@ -95,3 +95,13 @@ Changes
 Removes
     [-] Removed all admin commands
 
+
+<-!------------------------------ 2.0 ------------------------------!->
+
+Additions
+    [+] Added /volume command
+    [+] Bot will stay online for 24/7
+
+Fixes
+    [*] Bot Crashing
+

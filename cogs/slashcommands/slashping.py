@@ -1,20 +1,21 @@
-import nextcord 
-from nextcord.ext import commands
+import discord 
+from discord.ext import commands
+from discord.commands import slash_command
 
 class SlashPing(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
-    @nextcord.slash_command(name = "ping", description = "Shows the Bot's ping.")
-    async def ping(self, interaction):
+        
+    @slash_command(description = "Shows the Bot's ping.")
+    async def ping(self, ctx):
 
-        embed = nextcord.Embed(title = "Ping", description = "**Calculating...**", color = 0xFB401B)
+        embed = discord.Embed(title = "Ping", description = "**Calculating...**", color = 0xFB401B)
 
-        await interaction.send(embed = embed)
+        msg = await ctx.send(embeds = [embed])
 
-        embedPing = nextcord.Embed(title = "🏓 Pong", description = f'Bot Latency: **{round(self.bot.latency * 1000)}** ms', color = 0xFB401B)
+        embedPing = discord.Embed(title = "🏓 Pong", description = f'Bot Latency: **{round(self.bot.latency * 1000)}** ms', color = 0xFB401B)
 
-        return await interaction.edit_original_message(embed = embedPing)
+        return await msg.edit(embeds = [embedPing])
 
 
 def setup(bot):

@@ -1,29 +1,59 @@
-import nextcord
-from nextcord import FFmpegPCMAudio
-from nextcord.ext import commands
+import discord
+from discord.commands import slash_command
+from shared.lavalinkclass import LavalinkVoiceClient
 
-from essentials import STREAM_LINK
+from private.essentials import STREAM_LINK
 
-class SlashJoin(commands.Cog):
+class Music(discord.ext.commands.Cog):
+
     def __init__(self, bot):
         self.bot = bot
-    
-    @nextcord.slash_command(name = "join", description = "Joins your voice channel and play the hits.")
-    async def join(self, interaction):
+        
+    async def ensure_voice(self, ctx, connect = True):
+        """ This check ensures that the bot and command author are in the same voicechannel. """
+        player = self.bot.lavalink.player_manager.create(ctx.guild.id, endpoint=str(ctx.guild.region))
 
-        voice_client = nextcord.utils.get(interaction.client.voice_clients, guild = interaction.guild)
+        if player.is_connected:
+            return await ctx.respond("I'm already connected to a channel.", ephemeral = True)
+        
+        should_connect = connect == True
 
-        if (voice_client):
-            return await interaction.send("I'm already connected to a channel.")
+        if not ctx.author.voice or not ctx.author.voice.channel:
+            return await ctx.respond('You must be in a voice channel to run this command.', ephemeral = True)
 
-        if (interaction.user.voice):
-            channel = interaction.user.voice.channel
-            player = await channel.connect()
-            player.play(FFmpegPCMAudio(STREAM_LINK))
-            return await interaction.send(f"I have joined the {interaction.user.voice.channel.mention} channel.")
-        else:
-           return await interaction.send("You must be in a voice channel to run this command.")
+        if not player.is_connected:
+            if not should_connect:
+                return await ctx.respond('Not connected.', ephemeral = True)
 
+            permissions = ctx.author.voice.channel.permissions_for(ctx.me)
+
+            if not permissions.connect or not permissions.speak:
+                return await ctx.respond('I need the `CONNECT` and `SPEAK` permissions.', ephemeral = True)
+
+            player.store('channel', ctx.channel.id)
+            await ctx.author.voice.channel.connect(cls=LavalinkVoiceClient)
+
+    @slash_command(description = "Joins your voice channel and play the hits.")
+    async def play(self, ctx):
+
+        await self.ensure_voice(ctx)
+
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+            
+        results = await player.node.get_tracks(STREAM_LINK)
+
+        player.add(requester = ctx.author.id, track = results['tracks'][0])
+        
+        player.store("channel", ctx.channel.id)
+
+        player.store("guild", ctx.guild.id)
+
+        if not player.is_playing:
+            
+            await player.play()
+            
+            return await ctx.respond(f"I have joined the {ctx.author.voice.channel.mention} channel.", ephemeral = True)
 
 def setup(bot):
-    bot.add_cog(SlashJoin(bot))
+    
+    bot.add_cog(Music(bot))
