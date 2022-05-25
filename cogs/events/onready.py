@@ -40,7 +40,7 @@ class status(commands.Cog):
                 await guild.change_voice_state(channel=channel)
             if int(event.code) == 4000 or int(event.code) == 1006:
                 await asyncio.sleep(5)
-                self.bot.get_guild(int(event.player.guild_id)).change_voice_state(channel = self.bot.get_channel(event.player.channel_id))
+                await self.bot.get_guild(int(event.player.guild_id)).change_voice_state(channel = self.bot.get_channel(event.player.channel_id))
             
                 
 
