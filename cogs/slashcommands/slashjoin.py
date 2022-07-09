@@ -2,7 +2,7 @@ import discord
 from discord.commands import slash_command
 from shared.lavalinkclass import LavalinkVoiceClient
 
-from private.essentials import STREAM_LINK
+from private.essentials import LAVA_REGION, STREAM_LINK
 
 class Music(discord.ext.commands.Cog):
 
@@ -11,7 +11,7 @@ class Music(discord.ext.commands.Cog):
         
     async def ensure_voice(self, ctx, connect = True):
         """ This check ensures that the bot and command author are in the same voicechannel. """
-        player = self.bot.lavalink.player_manager.create(ctx.guild.id, endpoint=str(ctx.guild.region))
+        player = self.bot.lavalink.player_manager.create(ctx.guild.id, endpoint=LAVA_REGION)
 
         if player.is_connected:
             return await ctx.respond("I'm already connected to a channel.", ephemeral = True)
