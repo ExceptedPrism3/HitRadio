@@ -1,22 +1,63 @@
-import discord 
+import discord
 from discord.ext import commands
-from discord.commands import slash_command
+
 
 class SlashPing(commands.Cog):
+    """
+    A cog that handles the slash command /ping to show the bot's latency.
+
+    Attributes
+    ----------
+    bot : commands.Bot
+        The bot instance associated with this cog.
+
+    Methods
+    -------
+    ping(ctx)
+        Sends an embed message in response to the /ping command.
+
+    """
+
     def __init__(self, bot):
+        """
+        Parameters
+        ----------
+        bot : commands.Bot
+            The bot instance associated with this cog.
+        """
         self.bot = bot
-        
-    @slash_command(description = "Shows the Bot's ping.")
+
+    @commands.slash_command(description="Shows the Bot's ping.")
     async def ping(self, ctx):
+        """
+        Sends an embed message in response to the /ping command.
 
-        embed = discord.Embed(title = "Ping", description = "**Calculating...**", color = 0xFB401B)
+        Parameters
+        ----------
+        ctx : commands.Context
+            The context object associated with the command.
 
-        msg = await ctx.send(embeds = [embed])
+        Returns
+        -------
+        None
+        """
+        embed = discord.Embed(title="🏓 Pong", description=f'Bot Latency: **{round(self.bot.latency * 1000)}** ms',
+                              color=0xFB401B)
 
-        embedPing = discord.Embed(title = "🏓 Pong", description = f'Bot Latency: **{round(self.bot.latency * 1000)}** ms', color = 0xFB401B)
-
-        return await msg.edit(embeds = [embedPing])
+        await ctx.respond(embeds=[embed], ephemeral=True)
 
 
 def setup(bot):
+    """
+    Adds the SlashPing cog to the bot.
+
+    Parameters
+    ----------
+    bot : commands.Bot
+        The bot instance to add the cog to.
+
+    Returns
+    -------
+    None
+    """
     bot.add_cog(SlashPing(bot))
