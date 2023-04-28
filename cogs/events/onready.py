@@ -5,7 +5,7 @@ from itertools import cycle
 from discord.ext import commands
 import lavalink
 
-from private.essentials import BOT_STATUS, LAVA_HOST, LAVA_PORT, LAVA_PASSWORD, LAVA_REGION, LAVA_NAME
+from private.essentials import BOT_STATUS, LAVA_HOST, LAVA_PORT, LAVA_PASSWORD, LAVA_REGION, LAVA_NAME, STREAM_LINK
 
 class status(commands.Cog):
 
@@ -41,6 +41,13 @@ class status(commands.Cog):
             if int(event.code) == 4000 or int(event.code) == 1006:
                 await asyncio.sleep(5)
                 await self.bot.get_guild(int(event.player.guild_id)).change_voice_state(channel = self.bot.get_channel(event.player.channel_id))
+        if isinstance(event, lavalink.events.TrackStuckEvent):
+                await asyncio.sleep(5)
+                results = await event.player.node.get_tracks(STREAM_LINK)
+                print(results)
+                track = results['tracks'][0]
+                event.player.add(track=track)
+                await event.player.play()
             
                 
 

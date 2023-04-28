@@ -11,7 +11,7 @@ class Music(discord.ext.commands.Cog):
         
     async def ensure_voice(self, ctx, connect = True):
         """ This check ensures that the bot and command author are in the same voicechannel. """
-        player = self.bot.lavalink.player_manager.create(ctx.guild.id, endpoint=str(ctx.guild.region))
+        player = self.bot.lavalink.player_manager.create(ctx.guild.id, endpoint='us')
 
         if player.is_connected:
             return await ctx.respond("I'm already connected to a channel.", ephemeral = True)
