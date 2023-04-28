@@ -55,5 +55,4 @@ class Music(discord.ext.commands.Cog):
             return await ctx.respond(f"I have joined the {ctx.author.voice.channel.mention} channel.", ephemeral = True)
 
 def setup(bot):
-    
-    bot.add_cog(Music(bot))
+
