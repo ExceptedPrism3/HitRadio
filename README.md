@@ -63,8 +63,7 @@ python3 -m pip install git+https://github.com/Pycord-Development/pycord
  Since this bot streams from a link it only needs `http` enabled in the sources.
  - Create a file named `essentials.py` and fill it with the following structure:
 
- <br>
-
+```py
     BOT_OWNER_ID = Owner_of_the_Bot_ID
 
     BOT_TOKEN = 'Bot_Token'
@@ -90,8 +89,10 @@ python3 -m pip install git+https://github.com/Pycord-Development/pycord
     LAVA_REGION = 'out_of_space'
 
     LAVA_NAME = 'any_name_is_good'
+```
 
 <br>
+
 4- Go back to the root of the project and execute the following command:
 
 ```python

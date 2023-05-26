@@ -13,13 +13,17 @@ initial_extensions = []
 
 # Cycle through the events folder that's located in the cogs folder and look for any file that ends with .py,
 # once found add it to the initial_extensions ArrayList
-for filename1 in os.listdir('./cogs/events'):
-    if filename1.endswith('.py'):
-        initial_extensions.append("cogs.events." + filename1[:-3])
+for events in os.listdir('./cogs/events'):
+    if events.endswith('.py'):
+        initial_extensions.append("cogs.events." + events[:-3])
 
-for filename1 in os.listdir('./cogs/slashcommands'):
-    if filename1.endswith('.py'):
-        initial_extensions.append("cogs.slashcommands." + filename1[:-3])
+for slashcommands in os.listdir('./cogs/slashcommands'):
+    if slashcommands.endswith('.py'):
+        initial_extensions.append("cogs.slashcommands." + slashcommands[:-3])
+
+for errors in os.listdir('./cogs/errors'):
+    if errors.endswith('.py'):
+        initial_extensions.append("cogs.errors." + errors[:-3])
 
 # Import whatever in the initial_extensions ArrayList into the main class
 if __name__ == '__main__':
