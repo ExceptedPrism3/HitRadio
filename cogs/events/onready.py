@@ -4,7 +4,7 @@ from discord.ext import commands, tasks
 from itertools import cycle
 import lavalink
 
-from private.essentials import BOT_STATUS, LAVA_HOST, LAVA_PORT, LAVA_PASSWORD, LAVA_REGION, LAVA_NAME, STREAM_LINK
+from private.essentials import BOT_STATUS, LAVA_HOST, LAVA_PORT, LAVA_PASSWORD, LAVA_REGION, LAVA_NAME
 
 class Status(commands.Cog):
     def __init__(self, bot):
