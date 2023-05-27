@@ -95,14 +95,14 @@ python3 main.py
 **Have fun with 24/7 Hits!**
 <br>
 
-# Support
+## Support
 
 If any Support is needed feel free to join the **[Discord Support Server](https://discord.com/invite/MfR5mcpVfX)** and ask there!
 <br>
 
-# Contributing
+## Contributing
 Pull requests are welcome. For major changes, open an issue or a ticket first to discuss what you would like to change.
 <br>
 
-# Special Thanks
+## Special Thanks
 A special thanks to a **[Friend](https://github.com/redmoogle)** who stood with me and helped me along the way!
