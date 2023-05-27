@@ -9,7 +9,8 @@ class OnPing(commands.Cog):
 
         if message.author.bot:
             return
-        if str(self.bot.user.id) in message.content:
+        
+        if str(self.bot.user.id) in message.content.lower():
             return await message.reply('Hi, to view my available commands, execute `/help` of the bot.')
 
 
