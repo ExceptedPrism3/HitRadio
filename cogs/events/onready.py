@@ -2,28 +2,26 @@ import asyncio
 import discord
 from discord.ext import commands, tasks
 from itertools import cycle
-from discord.ext import commands
 import lavalink
 
-from private.essentials import BOT_STATUS, LAVA_HOST, LAVA_PORT, LAVA_PASSWORD, LAVA_REGION, LAVA_NAME, STREAM_LINK
+from private.essentials import BOT_STATUS, LAVA_HOST, LAVA_PORT, LAVA_PASSWORD, LAVA_REGION, LAVA_NAME
 
-class status(commands.Cog):
-
+class Status(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.status = cycle(BOT_STATUS)
 
     @tasks.loop(seconds=300.0)
     async def change_status(self):
-        await self.bot.change_presence(activity = discord.Activity(type = discord.ActivityType.listening, name = next(self.status)))
-        
+        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=next(self.status)))
+
     @commands.Cog.listener()
     async def on_ready(self):
-        print(self.bot.user, 'has Started')
+        print(self.bot.user, 'has started')
         print('--------------------------')
         await self.bot.wait_until_ready()
-        totalServersLine = f'Hits with {len(self.bot.guilds)} servers'
-        BOT_STATUS.append(totalServersLine)
+        total_servers_line = f'Hits with {len(self.bot.guilds)} servers'
+        BOT_STATUS.append(total_servers_line)
         self.change_status.start()
         self.bot.lavalink = lavalink.Client(self.bot.user.id)
         self.bot.lavalink.add_node(LAVA_HOST, LAVA_PORT, LAVA_PASSWORD, LAVA_REGION, LAVA_NAME)
@@ -40,16 +38,6 @@ class status(commands.Cog):
                 await guild.change_voice_state(channel=channel)
             if int(event.code) == 4000 or int(event.code) == 1006:
                 await asyncio.sleep(5)
-                await self.bot.get_guild(int(event.player.guild_id)).change_voice_state(channel = self.bot.get_channel(event.player.channel_id))
-        if isinstance(event, lavalink.events.TrackStuckEvent):
-                await asyncio.sleep(5)
-                results = await event.player.node.get_tracks(STREAM_LINK)
-                print(results)
-                track = results['tracks'][0]
-                event.player.add(track=track)
-                await event.player.play()
-            
-                
 
 def setup(bot):
-    bot.add_cog(status(bot))
+    bot.add_cog(Status(bot))
