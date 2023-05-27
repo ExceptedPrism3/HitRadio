@@ -4,7 +4,7 @@
 
 Stay connected with HitRadio's cutting-edge features, including real-time song information, interactive commands, and a friendly community of music enthusiasts. Whether you're a music lover, a party enthusiast, or a radio aficionado, HitRadio is here to elevate your Discord experience.
 
-🔗 You can find this bot **[here](https://top.gg/bot/949629320110944256)**, or you can invite it from **[here](https://discord.com/api/oauth2/authorize?client_id=1086030727650476153&permissions=277062450240&scope=applications.commands%20bot)**.
+🔗 You can find this bot **[here](https://top.gg/bot/1086030727650476153)**, or you can invite it from **[here](https://discord.com/api/oauth2/authorize?client_id=1086030727650476153&permissions=277062450240&scope=applications.commands%20bot)**.
 
 Execute `/help` of the bot to view all available commands!
 
