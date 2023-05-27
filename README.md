@@ -54,7 +54,7 @@ pip install lavalink
 
 3️⃣ Create a folder named `private` and change your directory to it and do the following:
 
-- Upload the **[Lavalink.jar](https://github.com/freyacodes/Lavalink/releases)**.
+- Upload the latest release of **[Lavalink.jar](https://github.com/freyacodes/Lavalink/releases)**.
 - Create a file named `application.yml` and fill it with this [example](https://github.com/freyacodes/Lavalink/blob/master/LavalinkServer/application.yml.example). Since this bot streams from a link it only requires **http** enabled in the sources section.
 - Create a file named `essentials.py` with the following structure:
 
