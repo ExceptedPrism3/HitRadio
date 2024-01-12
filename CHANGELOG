@@ -41,7 +41,7 @@ Changes
 
 Additions
     [+] Slash Commands
-    [+] New Status Messages
+    [+] New OnReady Messages
     [+] Uptime Command
 
 Changes
@@ -78,7 +78,7 @@ Removes
 
 Additions
     [+] /info command that display some information about the Bot
-    [+] new Status Message
+    [+] new OnReady Message
 
 Fixes
     [!] /uptime Command
@@ -110,3 +110,19 @@ Fixes
 
 Fixes
     [*] Minor Fixes
+
+
+<-!------------------------------ 3.0 ------------------------------!->
+
+Additions
+    [+] The bot will rejoin the channel after a restart or crash from our side
+
+Changes
+    [*] Major Bot code refactoring
+    [*] Switched to FFMPEG instead of LavaLink
+
+Fixes
+    [!] Often audio interruption
+
+Removes
+    [-] Removed the on_prefix event as it's useless
