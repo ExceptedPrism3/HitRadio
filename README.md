@@ -68,7 +68,7 @@ mkdir private
 cd private
 ```
 <br>
-4- Create a python file called **essentials.py** and write into it the following
+4- Create a python file called <b>essentials.py</b> and write into it the following
 
 ```bash
 echo "BOT_OWNER_ID = Owner_of_the_Bot_ID
