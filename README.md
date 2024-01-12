@@ -35,10 +35,14 @@ Execute `/help` of the bot in Discord to view all available commands!
 - **User-Friendly Interface**: Simple and intuitive commands for all users.
 - **Multiple Bot Support**: Explore other bots created by the same developer, with direct invite links.
 
+<br>
+
 ## 🚀 Prequesitive
 - Brain (Optional xD)
 - Python 3.10 or higher
 - Internet
+
+<br>
 
 ## ⚙️ Installation
 
@@ -63,7 +67,7 @@ pip install -r requirements.txt
 mkdir private
 cd private
 ```
-
+<br>
 4- Create a python file called **essentials.py** and write into it the following
 
 ```bash
@@ -88,12 +92,14 @@ OTHER_BOT_2 = 'INVITE_LINK_2'" > essentials.py
 ```
 
 <br>
-4- Go back to the root of the project and execute the following command:
+5- Go back to the root of the project and execute the following command:
 
 ```bash
 cd ..
 python main.py
 ```
+
+<br>
 
 ## 🌐 Extra Features
 Enhance your bot's capabilities by integrating additional bots you own. To showcase your other creations when users
@@ -102,6 +108,7 @@ folder and insert the bot's invite links bellow it. This feature allows you to c
 for all your Discord bots, creating a more engaging and diverse experience for your users.
 
 ### 🎉 **Enjoy 24/7 Hits with HitRadio!**
+<br>
 
 ## 📄 License
 
