@@ -4,7 +4,7 @@ import discord
 from discord.app_commands import command
 from discord.ext import commands
 
-from private.essentials import BOT_INVITE, INVITE_LINK, BOT_OWNER_ID, OTHER_BOT_1, OTHER_BOT_2, OTHER_BOT_ENABLED
+from private.essentials import BOT_INVITE, INVITE_LINK, BOT_OWNER_ID, OTHER_BOT_1, OTHER_BOT_2
 
 
 # Class for creating a custom interactive view for the /info command
@@ -15,12 +15,12 @@ class SlashInfoUI(discord.ui.View):
         self.add_item(discord.ui.Button(label="Invite", url=BOT_INVITE, emoji="➕", style=discord.ButtonStyle.link))
         # Add 'Support' button for the bot
         self.add_item(discord.ui.Button(label="Support", url=INVITE_LINK, emoji="📩", style=discord.ButtonStyle.link))
-        if OTHER_BOT_ENABLED:
-            # Create 'Other Bots' button and set its callback method if enabled
-            other_bots_button = discord.ui.Button(label="Other Bots", custom_id="other_bots", emoji="🤖",
-                                                  style=discord.ButtonStyle.secondary)
-            other_bots_button.callback = self.other_bots_button_callback
-            self.add_item(other_bots_button)
+
+        # Create 'Other Bots' button and set its callback method
+        other_bots_button = discord.ui.Button(label="Other Bots", custom_id="other_bots", emoji="🤖",
+                                              style=discord.ButtonStyle.secondary)
+        other_bots_button.callback = self.other_bots_button_callback
+        self.add_item(other_bots_button)
 
     # Callback method for 'Other Bots' button
     async def other_bots_button_callback(self, interaction: discord.Interaction):
