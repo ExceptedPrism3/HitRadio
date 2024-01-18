@@ -31,13 +31,13 @@ async def check_stream(bot, db_path, restart_audio_stream, save_state):
             # Get the voice client for the guild
             voice_client = guild.voice_client
             # Check if the bot is connected to a voice channel and not playing
-            if voice_client and voice_client.is_connected():
-                if not voice_client.is_playing():
-                    # Check if the stream link is working
-                    if await is_stream_working():
-                        # Restart the audio stream in the guild's voice channel
-                        await restart_audio_stream(guild)
-                        # Save the state to the database
-                        await save_state(db_path, guild.id, voice_client.channel.id)
+            if voice_client and voice_client.is_connected() and not voice_client.is_playing():
+                # Check if the stream link is working
+                if not await is_stream_working():
+                    logging.error("Stream link is not working. Attempting to restart...")
+                    # Restart the audio stream in the guild's voice channel
+                    await restart_audio_stream(guild)
+                    # Save the state to the database
+                    await save_state(db_path, guild.id, voice_client.channel.id)
         # Wait for a specified interval before checking again
         await asyncio.sleep(60)

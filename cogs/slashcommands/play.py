@@ -72,7 +72,7 @@ class SlashPlay(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
         else:
             embed.description = "🔊 Already playing audio in this channel."
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+            await interaction.followup.send(embed=embed, ephemeral=True)
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 

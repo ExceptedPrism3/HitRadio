@@ -1,3 +1,6 @@
+import asyncio
+import logging
+
 import discord
 
 from private.essentials import STREAM_LINK
@@ -26,9 +29,23 @@ async def join_and_play(channel, guild):
 
 # Function to play audio in a voice channel
 def play_audio(voice_client):
-    audio_source = discord.FFmpegPCMAudio(STREAM_LINK, options='-b:a 96k')
-    if not voice_client.is_playing():
-        voice_client.play(audio_source, after=lambda e: print('Player error:', e) if e else None)
+    try:
+        audio_source = discord.FFmpegPCMAudio(STREAM_LINK, options='-b:a 96k')
+        if not voice_client.is_playing():
+            voice_client.play(audio_source, after=lambda e: handle_playback_errors(e, voice_client))
+    except Exception as e:
+        logging.error(f"Error starting FFmpeg audio stream: {e}")
+
+        # wait 10 seconds before retrying
+        asyncio.sleep(10)
+        play_audio(voice_client)  # Retry playing the audio
+
+
+def handle_playback_errors(error, voice_client):
+    if error:
+        logging.error(f"FFmpeg playback error: {error}")
+        # Implement error recovery such as restarting the stream
+        restart_audio_stream(voice_client.guild)
 
 
 # Function to restart the audio stream in a guild's voice channel
