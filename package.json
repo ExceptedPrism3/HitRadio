@@ -1,0 +1,36 @@
+{
+  "name": "hitradio",
+  "version": "4.0",
+  "description": "HitRadio Radio Discord Bot.",
+  "main": "hitradio.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "discord-bot",
+    "music-bot",
+    "hit",
+    "hits",
+    "radio",
+    "hitradio",
+    "hit-radio",
+    "radio-bot",
+    "radio-music",
+    "radio-music-bot"
+  ],
+  "author": "Prism3",
+  "license": "MIT",
+  "dependencies": {
+    "@discordjs/voice": "^0.17.0",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "libsodium-wrappers": "^0.7.15"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ExceptedPrism3/HitRadio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ExceptedPrism3/HitRadio/issues"
+  }
+}
