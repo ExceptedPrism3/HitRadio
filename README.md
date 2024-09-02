@@ -1,6 +1,8 @@
 
 # 🎵 HitRadio
 
+![Banner](previews/HitRadio.gif)
+
 HitRadio is a Discord bot that plays non-stop Hits from the HitRadio Radio Station. The bot is built using JavaScript and leverages the Discord.js library to deliver a seamless music streaming experience.
 
 ## 🚀 Features
