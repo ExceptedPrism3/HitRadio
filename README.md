@@ -11,6 +11,7 @@ HitRadio is a Discord bot that plays non-stop Hits from the HitRadio Radio Stati
 - Easy-to-use commands.
 - Interactive buttons for voting and inviting the bot.
 - Customizable status messages that rotate between multiple strings.
+- Auto Join when the bot restarts.
 
 ## 🛠️ Installation
 
