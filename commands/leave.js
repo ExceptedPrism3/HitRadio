@@ -1,11 +1,12 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { leaveChannel } = require('../utils/player');
+const { Player } = require('../utils/player');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('leave')
         .setDescription('👋 Leave the voice channel.'),
     async execute(interaction) {
-        leaveChannel(interaction);
+        const player = new Player(interaction);
+        player.leaveChannel();
     },
 };

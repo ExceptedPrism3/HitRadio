@@ -135,3 +135,13 @@ Fixes
 
 Changes
     [*] Recoded into JS
+
+
+<-!------------------------------ 4.1 ------------------------------!->
+
+Additions
+    [+] Code Optimisation
+    [+] Bot now auto-joins previously connected voice channels on startup/restart.
+
+Changes
+    [*] Database files (.db, .db-shm, .db-wal) are now stored in a 'data' directory for better organization.
