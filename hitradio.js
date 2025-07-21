@@ -1,3 +1,4 @@
+require('./utils/logger');
 require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js');
 const { loadEvents } = require('./loaders/eventLoader');

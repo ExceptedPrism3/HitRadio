@@ -1,3 +1,9 @@
+<-!------------------------------ 4.2 ------------------------------!->
+
+Additions
+    [+] Added a logging system that creates a `logs` directory and a dated log file (e.g., `21-07-2025.log`) for console output.
+
+
 <-!------------------------------ 1.2 ------------------------------!->
 
 Additions
