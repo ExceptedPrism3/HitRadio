@@ -61,6 +61,11 @@ class Player {
             guildId: userChannel.guild.id,
             adapterCreator: userChannel.guild.voiceAdapterCreator,
         });
+
+        this.connection.on('error', error => {
+            console.error('VoiceConnection Error:', error.message);
+        });
+
         saveChannel(userChannel.guild.id, userChannel.id);
 
         const player = createAudioPlayer();

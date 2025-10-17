@@ -1,7 +1,7 @@
 const { ActivityType } = require('discord.js');
 const config = require('../config.json');
 const { loadCommands } = require("../loaders/commandLoader");
-const { getAllChannels } = require('../utils/database');
+const { getAllChannels, removeChannel } = require('../utils/database');
 const {
     joinVoiceChannel,
     createAudioPlayer,
@@ -33,6 +33,12 @@ module.exports = {
                         channelId: channel.id,
                         guildId: channel.guild.id,
                         adapterCreator: channel.guild.voiceAdapterCreator,
+                    });
+
+                    connection.on('error', error => {
+                        console.error(`VoiceConnection Error in guild ${guildId}:`, error.message);
+                        connection.destroy();
+                        removeChannel(guildId);
                     });
 
                     const player = createAudioPlayer();
