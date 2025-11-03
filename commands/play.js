@@ -7,6 +7,6 @@ module.exports = {
         .setDescription('🎶 Play Hits in your voice channel.'),
     async execute(interaction) {
         const player = new Player(interaction);
-        player.playMusic();
+        await player.playMusic();
     },
 };

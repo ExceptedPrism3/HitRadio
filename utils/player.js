@@ -3,7 +3,9 @@ const {
     joinVoiceChannel,
     createAudioPlayer,
     createAudioResource,
-    AudioPlayerStatus
+    AudioPlayerStatus,
+    VoiceConnectionStatus,
+    entersState
 } = require('@discordjs/voice');
 const { EmbedBuilder } = require('discord.js');
 const { saveChannel, removeChannel } = require('../utils/database');
@@ -11,7 +13,10 @@ const { saveChannel, removeChannel } = require('../utils/database');
 const mp3_link = "https://hitradio-maroc.ice.infomaniak.ch/hitradio-maroc-128.mp3";
 
 function createHitRadioResource() {
-    return createAudioResource(mp3_link);
+    return createAudioResource(mp3_link, {
+        inputType: 'unknown',
+        inlineVolume: false
+    });
 }
 
 class Player {
@@ -50,7 +55,7 @@ class Player {
         return false;
     }
 
-    playMusic() {
+    async playMusic() {
         const userChannel = this.checkUserInVoiceChannel();
         if (!userChannel) return;
 
@@ -68,20 +73,39 @@ class Player {
 
         saveChannel(userChannel.guild.id, userChannel.id);
 
-        const player = createAudioPlayer();
-        player.play(createHitRadioResource());
-        this.connection.subscribe(player);
+        try {
+            // Wait for the connection to be ready before playing audio
+            await entersState(this.connection, VoiceConnectionStatus.Ready, 20e3);
+            
+            const player = createAudioPlayer();
+            
+            player.on(AudioPlayerStatus.Idle, () => {
+                const resource = createHitRadioResource();
+                player.play(resource);
+            });
 
-        player.on(AudioPlayerStatus.Idle, () => {
-            player.play(createHitRadioResource());
-        });
+            player.on('error', error => {
+                console.error('AudioPlayer Error:', error.message);
+                // Try to recover by playing a new resource
+                try {
+                    const resource = createHitRadioResource();
+                    player.play(resource);
+                } catch (err) {
+                    console.error('Failed to recover from error:', err.message);
+                }
+            });
 
-        player.on('error', error => {
-            console.error('Error:', error.message);
-            player.play(createHitRadioResource());
-        });
+            // Start playing
+            const resource = createHitRadioResource();
+            player.play(resource);
+            this.connection.subscribe(player);
 
-        this.sendEmbed('#00FF00', 'Now playing the Hits 24/7!', '🎶');
+            this.sendEmbed('#00FF00', 'Now playing the Hits 24/7!', '🎶');
+        } catch (error) {
+            console.error('Failed to play audio:', error.message);
+            this.connection.destroy();
+            this.sendEmbed('#FF0000', 'Failed to connect to voice channel. Please try again.', '❌');
+        }
     }
 
     leaveChannel() {

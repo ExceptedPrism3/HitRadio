@@ -6,12 +6,17 @@ const {
     joinVoiceChannel,
     createAudioPlayer,
     createAudioResource,
-    AudioPlayerStatus
+    AudioPlayerStatus,
+    VoiceConnectionStatus,
+    entersState
 } = require('@discordjs/voice');
 const { mp3_link } = require('../utils/player');
 
 function createHitRadioResource() {
-    return createAudioResource(mp3_link);
+    return createAudioResource(mp3_link, {
+        inputType: 'unknown',
+        inlineVolume: false
+    });
 }
 
 module.exports = {
@@ -41,18 +46,37 @@ module.exports = {
                         removeChannel(guildId);
                     });
 
-                    const player = createAudioPlayer();
-                    player.play(createHitRadioResource());
-                    connection.subscribe(player);
+                    // Wait for connection to be ready, then start playing
+                    entersState(connection, VoiceConnectionStatus.Ready, 20e3)
+                        .then(() => {
+                            const player = createAudioPlayer();
+                            
+                            player.on(AudioPlayerStatus.Idle, () => {
+                                const resource = createHitRadioResource();
+                                player.play(resource);
+                            });
 
-                    player.on(AudioPlayerStatus.Idle, () => {
-                        player.play(createHitRadioResource());
-                    });
+                            player.on('error', error => {
+                                console.error(`AudioPlayer Error in guild ${guildId}, channel ${channelId}:`, error.message);
+                                try {
+                                    const resource = createHitRadioResource();
+                                    player.play(resource);
+                                } catch (err) {
+                                    console.error(`Failed to recover in guild ${guildId}:`, err.message);
+                                }
+                            });
 
-                    player.on('error', error => {
-                        console.error(`Error in guild ${guildId}, channel ${channelId}:`, error.message);
-                        player.play(createHitRadioResource());
-                    });
+                            // Start playing
+                            const resource = createHitRadioResource();
+                            player.play(resource);
+                            connection.subscribe(player);
+                            console.log(`Started playing in guild ${guildId}, channel ${channelId}`);
+                        })
+                        .catch(error => {
+                            console.error(`Failed to connect to voice in guild ${guildId}:`, error.message);
+                            connection.destroy();
+                            removeChannel(guildId);
+                        });
 
                     } else {
                     // Skipping auto-join for guild ${guildId}, channel ${channelId}: Channel not found or not a voice channel.
