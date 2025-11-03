@@ -1,28 +1,37 @@
 require('./utils/logger');
 require('dotenv').config();
 
+// CRITICAL: Initialize encryption library BEFORE requiring @discordjs/voice
+// @discordjs/voice checks for encryption libraries when it's first required
+let encryptionReady = false;
+
+try {
+  require('sodium');
+  encryptionReady = true;
+  console.log('Loaded sodium for voice encryption');
+} catch (error) {
+  try {
+    // Try to load libsodium-wrappers
+    require('libsodium-wrappers');
+    encryptionReady = true;
+    console.log('Loaded libsodium-wrappers for voice encryption');
+    // Note: libsodium-wrappers will initialize asynchronously, but @discordjs/voice
+    // should detect it when it loads. The ready promise will be handled later.
+  } catch (err) {
+    console.warn('Warning: No encryption library found. Voice connections may fail.');
+    console.warn('Please install one of: "sodium", "libsodium-wrappers", or "sodium-native"');
+    console.warn('Error:', err.message);
+  }
+}
+
+// Now we can safely require @discordjs/voice
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js');
 const { loadEvents } = require('./loaders/eventLoader');
 const { generateDependencyReport } = require('@discordjs/voice');
 
-// Initialize encryption library for voice connections
-async function initializeEncryption() {
-  try {
-    require('sodium');
-    console.log('Loaded sodium for voice encryption');
-  } catch (error) {
-    try {
-      const sodium = require('libsodium-wrappers');
-      await sodium.ready;
-      console.log('Loaded and initialized libsodium-wrappers for voice encryption');
-    } catch (err) {
-      console.warn('Warning: No encryption library found. Voice connections may fail. Please install "sodium" or "libsodium-wrappers"');
-    }
-  }
-  
-  // Log dependency report for debugging
-  console.log(generateDependencyReport());
-}
+// Log dependency report for debugging - this will show what encryption libraries are detected
+console.log('Voice dependency report:');
+console.log(generateDependencyReport());
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates] });
 
@@ -59,8 +68,5 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-// Initialize encryption and then start the bot
-(async () => {
-  await initializeEncryption();
-  client.login(process.env.DISCORD_TOKEN);
-})();
+// Start the bot
+client.login(process.env.DISCORD_TOKEN);
