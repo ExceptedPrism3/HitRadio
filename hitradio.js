@@ -7,9 +7,13 @@ let encryptionReady = false;
 
 try {
   // Try sodium-native first (preferred, native bindings)
-  require('sodium-native');
+  const sodium = require('sodium-native');
   encryptionReady = true;
   console.log('Loaded sodium-native for voice encryption');
+  // Explicitly verify sodium-native is working
+  if (typeof sodium.crypto_aead_xchacha20poly1305_ietf_encrypt === 'function') {
+    console.log('sodium-native encryption functions verified');
+  }
 } catch (error) {
   try {
     // Try sodium (native package)
@@ -19,11 +23,15 @@ try {
   } catch (error2) {
     try {
       // Try libsodium-wrappers (pure JS, slower but works)
-      require('libsodium-wrappers');
+      const libsodium = require('libsodium-wrappers');
       encryptionReady = true;
       console.log('Loaded libsodium-wrappers for voice encryption');
-      // Note: libsodium-wrappers will initialize asynchronously, but @discordjs/voice
-      // should detect it when it loads. The ready promise will be handled later.
+      // Initialize libsodium-wrappers asynchronously
+      libsodium.ready.then(() => {
+        console.log('libsodium-wrappers initialized and ready');
+      }).catch((err) => {
+        console.warn('Failed to initialize libsodium-wrappers:', err.message);
+      });
     } catch (err) {
       console.warn('Warning: No encryption library found. Voice connections may fail.');
       console.warn('Please install one of: "sodium-native", "sodium", or "libsodium-wrappers"');

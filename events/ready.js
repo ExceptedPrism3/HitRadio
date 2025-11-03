@@ -40,15 +40,26 @@ module.exports = {
                         adapterCreator: channel.guild.voiceAdapterCreator,
                     });
 
+                    let connectionDestroyed = false;
+
                     connection.on('error', error => {
                         console.error(`VoiceConnection Error in guild ${guildId}:`, error.message);
-                        connection.destroy();
-                        removeChannel(guildId);
+                        if (!connectionDestroyed) {
+                            connectionDestroyed = true;
+                            try {
+                                connection.destroy();
+                            } catch (err) {
+                                // Connection already destroyed, ignore
+                            }
+                            removeChannel(guildId);
+                        }
                     });
 
                     // Wait for connection to be ready, then start playing
                     entersState(connection, VoiceConnectionStatus.Ready, 20e3)
                         .then(() => {
+                            if (connectionDestroyed) return;
+                            
                             const player = createAudioPlayer();
                             
                             player.on(AudioPlayerStatus.Idle, () => {
@@ -74,8 +85,15 @@ module.exports = {
                         })
                         .catch(error => {
                             console.error(`Failed to connect to voice in guild ${guildId}:`, error.message);
-                            connection.destroy();
-                            removeChannel(guildId);
+                            if (!connectionDestroyed) {
+                                connectionDestroyed = true;
+                                try {
+                                    connection.destroy();
+                                } catch (err) {
+                                    // Connection already destroyed, ignore
+                                }
+                                removeChannel(guildId);
+                            }
                         });
 
                     } else {
