@@ -61,21 +61,35 @@ class Player {
 
         if (this.checkBotInVoiceChannel(userChannel)) return;
 
+        console.log(`Attempting to join voice channel ${userChannel.id} in guild ${userChannel.guild.id}`);
+        
         this.connection = joinVoiceChannel({
             channelId: userChannel.id,
             guildId: userChannel.guild.id,
             adapterCreator: userChannel.guild.voiceAdapterCreator,
         });
 
+        // Track connection state changes
+        this.connection.on('stateChange', (oldState, newState) => {
+            console.log(`Connection state changed: ${oldState.status} -> ${newState.status}`);
+            if (newState.status === VoiceConnectionStatus.Disconnected) {
+                console.log('Voice connection disconnected');
+            }
+        });
+
+        // Only destroy on critical errors, not all errors
         this.connection.on('error', error => {
             console.error('VoiceConnection Error:', error.message);
+            // Don't auto-destroy on error, let it try to recover
         });
 
         saveChannel(userChannel.guild.id, userChannel.id);
 
         try {
+            console.log('Waiting for connection to be ready...');
             // Wait for the connection to be ready before playing audio
-            await entersState(this.connection, VoiceConnectionStatus.Ready, 20e3);
+            await entersState(this.connection, VoiceConnectionStatus.Ready, 30e3);
+            console.log('Connection is ready, starting audio player...');
             
             const player = createAudioPlayer();
             
@@ -99,12 +113,16 @@ class Player {
             const resource = createHitRadioResource();
             player.play(resource);
             this.connection.subscribe(player);
+            console.log('Audio player started and subscribed to connection');
 
             this.sendEmbed('#00FF00', 'Now playing the Hits 24/7!', '🎶');
         } catch (error) {
             console.error('Failed to play audio:', error.message);
-            this.connection.destroy();
-            this.sendEmbed('#FF0000', 'Failed to connect to voice channel. Please try again.', '❌');
+            console.error('Error details:', error);
+            if (this.connection) {
+                this.connection.destroy();
+            }
+            this.sendEmbed('#FF0000', `Failed to connect to voice channel: ${error.message}`, '❌');
         }
     }
 
