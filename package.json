@@ -27,7 +27,8 @@
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
     "libsodium-wrappers": "^0.7.15",
-    "sodium": "^3.0.2"
+    "sodium": "^3.0.2",
+    "sodium-native": "^4.0.4"
   },
   "repository": {
     "type": "git",
