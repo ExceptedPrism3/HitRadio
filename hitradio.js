@@ -1,4 +1,18 @@
 require('./utils/logger');
+
+// Initialize encryption library for voice connections
+try {
+  require('sodium');
+  console.log('Loaded sodium for voice encryption');
+} catch (error) {
+  try {
+    require('libsodium-wrappers');
+    console.log('Loaded libsodium-wrappers for voice encryption');
+  } catch (err) {
+    console.warn('Warning: No encryption library found. Voice connections may fail. Please install "sodium" or "libsodium-wrappers"');
+  }
+}
+
 require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js');
 const { loadEvents } = require('./loaders/eventLoader');

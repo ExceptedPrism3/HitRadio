@@ -15,10 +15,18 @@ function getFormattedDate() {
   return `${day}-${month}-${year}`;
 }
 
-const logFileName = `${getFormattedDate()}.log`;
-const logFilePath = path.join(logsDir, logFileName);
+let currentLogDate = getFormattedDate();
+let logStream = fs.createWriteStream(path.join(logsDir, `${currentLogDate}.log`), { flags: 'a' });
 
-const logStream = fs.createWriteStream(logFilePath, { flags: 'a' });
+function ensureLogFile() {
+  const today = getFormattedDate();
+  if (today !== currentLogDate) {
+    // Date changed, close old stream and create new one
+    logStream.end();
+    currentLogDate = today;
+    logStream = fs.createWriteStream(path.join(logsDir, `${currentLogDate}.log`), { flags: 'a' });
+  }
+}
 
 const originalConsoleLog = console.log;
 const originalConsoleError = console.error;
@@ -26,6 +34,7 @@ const originalConsoleWarn = console.warn;
 const originalConsoleInfo = console.info;
 
 function logToFile(message) {
+    ensureLogFile();
     const timestamp = new Date().toISOString();
     logStream.write(`[${timestamp}] ${message}\n`);
 }
