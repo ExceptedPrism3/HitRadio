@@ -14,6 +14,11 @@ try {
   if (typeof sodium.crypto_aead_xchacha20poly1305_ietf_encrypt === 'function') {
     console.log('sodium-native encryption functions verified');
   }
+  // Check for the specific encryption modes Discord requires
+  console.log('Checking for required encryption modes...');
+  console.log('crypto_aead_aes256gcm_encrypt:', typeof sodium.crypto_aead_aes256gcm_encrypt);
+  console.log('crypto_aead_xchacha20poly1305_ietf_encrypt:', typeof sodium.crypto_aead_xchacha20poly1305_ietf_encrypt);
+  console.log('crypto_aead_chacha20poly1305_ietf_encrypt:', typeof sodium.crypto_aead_chacha20poly1305_ietf_encrypt);
 } catch (error) {
   try {
     // Try sodium (native package)
