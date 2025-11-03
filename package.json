@@ -21,7 +21,7 @@
   "author": "Prism3",
   "license": "MIT",
   "dependencies": {
-    "@discordjs/voice": "^0.17.1",
+    "@discordjs/voice": "^0.17.0",
     "better-sqlite3": "^12.2.0",
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
