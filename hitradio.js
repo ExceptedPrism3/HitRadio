@@ -1,21 +1,28 @@
 require('./utils/logger');
-
-// Initialize encryption library for voice connections
-try {
-  require('sodium');
-  console.log('Loaded sodium for voice encryption');
-} catch (error) {
-  try {
-    require('libsodium-wrappers');
-    console.log('Loaded libsodium-wrappers for voice encryption');
-  } catch (err) {
-    console.warn('Warning: No encryption library found. Voice connections may fail. Please install "sodium" or "libsodium-wrappers"');
-  }
-}
-
 require('dotenv').config();
+
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js');
 const { loadEvents } = require('./loaders/eventLoader');
+const { generateDependencyReport } = require('@discordjs/voice');
+
+// Initialize encryption library for voice connections
+async function initializeEncryption() {
+  try {
+    require('sodium');
+    console.log('Loaded sodium for voice encryption');
+  } catch (error) {
+    try {
+      const sodium = require('libsodium-wrappers');
+      await sodium.ready;
+      console.log('Loaded and initialized libsodium-wrappers for voice encryption');
+    } catch (err) {
+      console.warn('Warning: No encryption library found. Voice connections may fail. Please install "sodium" or "libsodium-wrappers"');
+    }
+  }
+  
+  // Log dependency report for debugging
+  console.log(generateDependencyReport());
+}
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates] });
 
@@ -52,4 +59,8 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+// Initialize encryption and then start the bot
+(async () => {
+  await initializeEncryption();
+  client.login(process.env.DISCORD_TOKEN);
+})();
