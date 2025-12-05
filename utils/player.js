@@ -7,10 +7,11 @@ const {
     VoiceConnectionStatus,
     entersState
 } = require('@discordjs/voice');
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { saveChannel, removeChannel } = require('../utils/database');
+const config = require('../config.json');
 
-const mp3_link = "https://hitradio-maroc.ice.infomaniak.ch/hitradio-maroc-128.mp3";
+const mp3_link = config.radioUrl;
 
 function createHitRadioResource() {
     return createAudioResource(mp3_link, {
@@ -29,7 +30,21 @@ class Player {
         const embed = new EmbedBuilder()
             .setColor(color)
             .setDescription(`${emoji} ${description}`);
-        this.interaction.reply({ embeds: [embed], ephemeral: true });
+
+        const components = [];
+
+        if (color === '#00FF00' && description.includes('Now playing')) {
+            const stopButton = new ButtonBuilder()
+                .setCustomId('stop_radio')
+                .setLabel('Stop Radio')
+                .setStyle(ButtonStyle.Danger)
+                .setEmoji('🛑');
+
+            const row = new ActionRowBuilder().addComponents(stopButton);
+            components.push(row);
+        }
+
+        this.interaction.reply({ embeds: [embed], components: components, ephemeral: true });
     }
 
     checkUserInVoiceChannel() {
@@ -62,7 +77,7 @@ class Player {
         if (this.checkBotInVoiceChannel(userChannel)) return;
 
         console.log(`Attempting to join voice channel ${userChannel.id} in guild ${userChannel.guild.id}`);
-        
+
         this.connection = joinVoiceChannel({
             channelId: userChannel.id,
             guildId: userChannel.guild.id,
@@ -90,9 +105,9 @@ class Player {
             // Wait for the connection to be ready before playing audio
             await entersState(this.connection, VoiceConnectionStatus.Ready, 30e3);
             console.log('Connection is ready, starting audio player...');
-            
+
             const player = createAudioPlayer();
-            
+
             player.on(AudioPlayerStatus.Idle, () => {
                 const resource = createHitRadioResource();
                 player.play(resource);
@@ -147,4 +162,4 @@ class Player {
     }
 }
 
-module.exports = { Player, mp3_link };
+module.exports = { Player, mp3_link, createHitRadioResource };

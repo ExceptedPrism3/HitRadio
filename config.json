@@ -15,5 +15,6 @@
     "Nancy Ajram",
     "Morphine"
   ],
-  "statusInterval": 30
+  "statusInterval": 30,
+  "radioUrl": "https://hitradio-maroc.ice.infomaniak.ch/hitradio-maroc-128.mp3"
 }

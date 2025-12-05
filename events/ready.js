@@ -5,19 +5,13 @@ const { getAllChannels, removeChannel } = require('../utils/database');
 const {
     joinVoiceChannel,
     createAudioPlayer,
-    createAudioResource,
     AudioPlayerStatus,
     VoiceConnectionStatus,
     entersState
 } = require('@discordjs/voice');
-const { mp3_link } = require('../utils/player');
+const { createHitRadioResource } = require('../utils/player');
 
-function createHitRadioResource() {
-    return createAudioResource(mp3_link, {
-        inputType: 'unknown',
-        inlineVolume: false
-    });
-}
+
 
 module.exports = {
     name: 'ready',
@@ -59,9 +53,9 @@ module.exports = {
                     entersState(connection, VoiceConnectionStatus.Ready, 20e3)
                         .then(() => {
                             if (connectionDestroyed) return;
-                            
+
                             const player = createAudioPlayer();
-                            
+
                             player.on(AudioPlayerStatus.Idle, () => {
                                 const resource = createHitRadioResource();
                                 player.play(resource);
@@ -96,7 +90,7 @@ module.exports = {
                             }
                         });
 
-                    } else {
+                } else {
                     // Skipping auto-join for guild ${guildId}, channel ${channelId}: Channel not found or not a voice channel.
                     // console.log(`Skipping auto-join for guild ${guildId}, channel ${channelId}: Channel not found or not a voice channel.`);
                 }

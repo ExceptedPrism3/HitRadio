@@ -4,7 +4,8 @@
   "description": "HitRadio Radio Discord Bot.",
   "main": "hitradio.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
   },
   "keywords": [
     "discord-bot",
@@ -21,13 +22,17 @@
   "author": "Prism3",
   "license": "MIT",
   "dependencies": {
-    "@discordjs/voice": "^0.17.0",
+    "@discordjs/voice": "^0.18.0",
     "better-sqlite3": "^12.2.0",
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
     "libsodium-wrappers": "^0.7.15",
     "sodium": "^3.0.2",
-    "sodium-native": "^4.0.4"
+    "sodium-native": "^5.0.10"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "prettier": "^3.7.4"
   },
   "repository": {
     "type": "git",
