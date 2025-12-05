@@ -7,18 +7,26 @@ HitRadio is a Discord bot that plays non-stop Hits from the HitRadio Radio Stati
 
 ## 🚀 Features
 
-- Continuous 24/7 streaming Hits.
-- Easy-to-use commands.
-- Interactive buttons for voting and inviting the bot.
-- Customizable status messages that rotate between multiple strings.
-- Auto Join when the bot restarts.
+- **24/7 Streaming**: Continuous Hits from HitRadio.
+- **High Quality Audio**: Uses `sodium-native` for optimal performance.
+- **Easy Control**: Interactive **Stop Button** 🛑 and slash commands.
+- **Auto Reconnection**: Automatically rejoins if the stream or connection drops.
+- **Custom Status**: Rotates through artist names and updates.
 
 ## 🛠️ Installation
 
 ### Prerequisites
 
-- Node.js v16.6.0 or higher
-- npm (Node Package Manager)
+- **Node.js v20.0.0** or higher
+- **npm** (Node Package Manager)
+- **FFmpeg** (Required for audio processing)
+
+### Linux (Ubuntu/Debian) Requirements
+If running on Linux, you must install build tools for the encryption libraries:
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential python3 libtool automake autoconf ffmpeg
+```
 
 ### Steps
 
@@ -34,51 +42,49 @@ HitRadio is a Discord bot that plays non-stop Hits from the HitRadio Radio Stati
    ```
 
 3. **Create a `.env` file:**
-   ```
+   ```env
    DISCORD_TOKEN=your_bot_token
    ```
 
-4. **Configure the bot:**
-   Edit the `config.json` file to set up your desired configuration, including the bot's activity status messages.
+4. **Configure the bot (Optional):**
+   Edit `config.json` to customize the status messages or radio URL.
 
 5. **Run the bot:**
    ```bash
+   # For development
    node hitradio.js
+
+   # For production (recommended)
+   pm2 start hitradio.js --name hitradio
    ```
 
 ## 🎮 Commands
 
-- `/play` - Start playing music in your voice channel.
-- `/leave` - Leave the voice channel.
-- `/ping` - Check the bot's latency.
-- `/uptime` - Check how long the bot has been running.
-- `/info` - Get information about the bot.
-- `/vote` - Get links to vote for the bot and invite it to other servers.
+- **/play** - 🎶 Start playing the radio in your voice channel.
+- **/stop** - 🛑 Stop the radio and leave the channel.
+- **/ping** - 🏓 Check the bot's latency.
+- **/uptime** - ⏱️ Check how long the bot has been running.
+- **/info** - ℹ️ Get information about the bot.
+- **/vote** - 🗳️ Get voting and invite links.
+- **/help** - ❓ List all available commands.
 
 ## 🤝 Contribution
 
 We welcome contributions! Feel free to fork this project, submit issues, or create pull requests.
 
-### Steps to Contribute
-
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes.
-4. Commit your changes (`git commit -am 'Add some feature'`).
-5. Push to the branch (`git push origin feature-branch`).
-6. Create a new Pull Request.
+3. Commit your changes.
+4. Push to the branch.
+5. Create a new Pull Request.
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the **[LICENSE](LICENSE)** file for details.
+This project is licensed under the **GNU AGPL v3** License - see the **[LICENSE](LICENSE)** file for details.
 
 ## 🛠️ Support
 
 If you encounter any issues or have questions, feel free to join our **[Support Discord Server](https://discord.gg/MfR5mcpVfX)** or open an issue on GitHub.
-
-## 💖 Thanks for using HitRadio!
-
-Your support is greatly appreciated! If you enjoy using this bot, please consider voting for it and inviting it to other servers.
 
 ---
 
