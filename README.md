@@ -3,6 +3,12 @@
 
 ![Banner](previews/HitRadio.gif)
 
+![Node.js](https://img.shields.io/badge/Node.js-v20+-green?style=for-the-badge&logo=node.js)
+![Discord.js](https://img.shields.io/badge/Discord.js-v14-blue?style=for-the-badge&logo=discord)
+![License](https://img.shields.io/badge/License-AGPL_v3-red?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
+![Code Style](https://img.shields.io/badge/Code_Style-Prettier-ff69b4?style=for-the-badge&logo=prettier)
+
 HitRadio is a Discord bot that plays non-stop Hits from the HitRadio Radio Station. The bot is built using JavaScript and leverages the Discord.js library to deliver a seamless music streaming experience.
 
 ## 🚀 Features
