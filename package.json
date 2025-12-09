@@ -27,6 +27,7 @@
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
     "libsodium-wrappers": "^0.7.15",
+    "opusscript": "^0.0.8",
     "sodium": "^3.0.2",
     "sodium-native": "^5.0.10"
   },
