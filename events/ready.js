@@ -45,7 +45,7 @@ module.exports = {
                             } catch (err) {
                                 // Connection already destroyed, ignore
                             }
-                            removeChannel(guildId);
+                            // removeChannel(guildId); // FIXED: Don't remove channel on error, allows auto-rejoin
                         }
                     });
 
@@ -86,7 +86,7 @@ module.exports = {
                                 } catch (err) {
                                     // Connection already destroyed, ignore
                                 }
-                                removeChannel(guildId);
+                                // removeChannel(guildId); // FIXED: Don't remove channel on error
                             }
                         });
 

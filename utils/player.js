@@ -24,6 +24,9 @@ class Player {
     constructor(interaction) {
         this.interaction = interaction;
         this.connection = getVoiceConnection(interaction.guild.id);
+        if (this.connection) {
+            this.connection.rejoinAttempts = 0;
+        }
     }
 
     sendEmbed(color, description, emoji = '') {
@@ -85,10 +88,42 @@ class Player {
         });
 
         // Track connection state changes
-        this.connection.on('stateChange', (oldState, newState) => {
+        // Track connection state changes
+        this.connection.on('stateChange', async (oldState, newState) => {
             console.log(`Connection state changed: ${oldState.status} -> ${newState.status}`);
+
             if (newState.status === VoiceConnectionStatus.Disconnected) {
-                console.log('Voice connection disconnected');
+                if (newState.reason === 4014 && newState.closeCode === 4014) {
+                    // Don't manually destroy, Discord handles this for channel moves
+                    // Wait for Reconnecting state
+                    try {
+                        await entersState(this.connection, VoiceConnectionStatus.Connecting, 5_000);
+                        // Probably moved voice channel
+                    } catch {
+                        // Failed to reconnect, might have been kicked
+                        if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
+                            this.connection.destroy();
+                        }
+                    }
+                } else if (this.connection.rejoinAttempts < 5) {
+                    // unexpected disconnect, wait and try to reconnect
+                    await new Promise(resolve => setTimeout(resolve, (this.connection.rejoinAttempts + 1) * 1000));
+                    this.connection.rejoin();
+                    this.connection.rejoinAttempts++;
+                } else {
+                    if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
+                        this.connection.destroy();
+                    }
+                }
+            } else if (newState.status === VoiceConnectionStatus.Destroyed) {
+                // If destroyed unexpectedly (not by /stop), try to restart cycle
+                // Note: user.leaveChannel() calls destroy() manually, so we need to know if it was manual.
+                // For now, rely on persisted DB + pm2 restart if needed, or simple rejoin logic if we can detect it.
+                // Since we removed removeChannel from ready.js error handler, 
+                // simply letting it die allows the persistence to work on next ready() trigger or restart.
+                console.log('Voice connection destroyed.');
+            } else if (newState.status === VoiceConnectionStatus.Connecting || newState.status === VoiceConnectionStatus.Signalling) {
+                this.connection.rejoinAttempts = 0;
             }
         });
 
