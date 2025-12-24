@@ -97,7 +97,7 @@ class Player {
                     // Don't manually destroy, Discord handles this for channel moves
                     // Wait for Reconnecting state
                     try {
-                        await entersState(this.connection, VoiceConnectionStatus.Connecting, 5_000);
+                        await entersState(this.connection, VoiceConnectionStatus.Connecting, 20_000);
                         // Probably moved voice channel
                     } catch {
                         // Failed to reconnect, might have been kicked
@@ -144,8 +144,15 @@ class Player {
             const player = createAudioPlayer();
 
             player.on(AudioPlayerStatus.Idle, () => {
-                const resource = createHitRadioResource();
-                player.play(resource);
+                // Wait a bit before trying to play again to avoid spamming if the stream is dead
+                setTimeout(() => {
+                    try {
+                        const resource = createHitRadioResource();
+                        player.play(resource);
+                    } catch (error) {
+                        console.error('Failed to restart stream:', error);
+                    }
+                }, 3000);
             });
 
             player.on('error', error => {
