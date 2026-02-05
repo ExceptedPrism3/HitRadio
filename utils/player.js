@@ -105,9 +105,9 @@ class Player {
                             this.connection.destroy();
                         }
                     }
-                } else if (this.connection.rejoinAttempts < 5) {
-                    // unexpected disconnect, wait and try to reconnect
-                    await new Promise(resolve => setTimeout(resolve, (this.connection.rejoinAttempts + 1) * 1000));
+                } else if (this.connection.rejoinAttempts < 15) {
+                    // unexpected disconnect, wait and try to reconnect (backoff improved)
+                    await new Promise(resolve => setTimeout(resolve, (this.connection.rejoinAttempts + 1) * 2000));
                     this.connection.rejoin();
                     this.connection.rejoinAttempts++;
                 } else {
