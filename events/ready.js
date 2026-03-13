@@ -7,11 +7,8 @@ const {
     createAudioPlayer,
     AudioPlayerStatus,
     VoiceConnectionStatus,
-    entersState
 } = require('@discordjs/voice');
-const { createHitRadioResource } = require('../utils/player');
-
-
+const { createHitRadioResource, waitForReady } = require('../utils/player');
 
 module.exports = {
     name: 'ready',
@@ -22,93 +19,99 @@ module.exports = {
         loadCommands(client);
 
         const savedChannels = getAllChannels();
-        for (const { guildId, channelId } of savedChannels) {
-            try {
-                const guild = await client.guilds.fetch(guildId);
-                const channel = await guild.channels.fetch(channelId);
+        const STAGGER_MS = 4000;
+        const INITIAL_DELAY_MS = 15000;
 
-                if (channel && channel.isVoiceBased()) {
-                    const connection = joinVoiceChannel({
-                        channelId: channel.id,
-                        guildId: channel.guild.id,
-                        adapterCreator: channel.guild.voiceAdapterCreator,
-                    });
+        setTimeout(() => {
+            let delayMs = 0;
+            savedChannels.forEach(({ guildId, channelId }) => {
+                setTimeout(async () => {
+                    try {
+                        const guild = await client.guilds.fetch(guildId);
+                        const channel = await guild.channels.fetch(channelId);
 
-                    let connectionDestroyed = false;
-
-                    connection.on('error', error => {
-                        console.error(`VoiceConnection Error in guild ${guildId}:`, error.message);
-                        if (!connectionDestroyed) {
-                            connectionDestroyed = true;
-                            try {
-                                connection.destroy();
-                            } catch (err) {
-                                // Connection already destroyed, ignore
-                            }
-                            // removeChannel(guildId); // FIXED: Don't remove channel on error, allows auto-rejoin
+                        if (!channel || !channel.isVoiceBased()) {
+                            removeChannel(guildId);
+                            return;
                         }
-                    });
 
-                    // Wait for connection to be ready, then start playing
-                    entersState(connection, VoiceConnectionStatus.Ready, 20e3)
-                        .then(() => {
-                            if (connectionDestroyed) return;
+                        const connection = joinVoiceChannel({
+                            channelId: channel.id,
+                            guildId: channel.guild.id,
+                            adapterCreator: channel.guild.voiceAdapterCreator,
+                        });
 
-                            const player = createAudioPlayer();
+                        let connectionDestroyed = false;
 
-                            player.on(AudioPlayerStatus.Idle, () => {
-                                const resource = createHitRadioResource();
-                                player.play(resource);
-                            });
-
-                            player.on('error', error => {
-                                console.error(`AudioPlayer Error in guild ${guildId}, channel ${channelId}:`, error.message);
-                                try {
-                                    const resource = createHitRadioResource();
-                                    player.play(resource);
-                                } catch (err) {
-                                    console.error(`Failed to recover in guild ${guildId}:`, err.message);
-                                }
-                            });
-
-                            // Start playing
-                            const resource = createHitRadioResource();
-                            player.play(resource);
-                            connection.subscribe(player);
-                            console.log(`Started playing in guild ${guildId}, channel ${channelId}`);
-                        })
-                        .catch(error => {
-                            console.error(`Failed to connect to voice in guild ${guildId}:`, error.message);
+                        connection.on('error', error => {
+                            console.error(`VoiceConnection Error in guild ${guildId}:`, error.message);
                             if (!connectionDestroyed) {
                                 connectionDestroyed = true;
                                 try {
                                     connection.destroy();
-                                } catch (err) {
-                                    // Connection already destroyed, ignore
-                                }
-                                // removeChannel(guildId); // FIXED: Don't remove channel on error
+                                } catch (err) {}
                             }
                         });
 
-                } else {
-                    // Skipping auto-join for guild ${guildId}, channel ${channelId}: Channel not found or not a voice channel.
-                    // console.log(`Skipping auto-join for guild ${guildId}, channel ${channelId}: Channel not found or not a voice channel.`);
-                }
-            } catch (error) {
-                console.error(`Failed to rejoin channel ${channelId} in guild ${guildId}:`, error.message);
-            }
-        }
+                        waitForReady(connection, 60e3)
+                            .then(() => {
+                                if (connectionDestroyed) return;
+
+                                const player = createAudioPlayer();
+
+                                player.on(AudioPlayerStatus.Idle, () => {
+                                    setTimeout(() => {
+                                        try {
+                                            player.play(createHitRadioResource());
+                                        } catch (err) {
+                                            console.error(`Failed to restart stream in guild ${guildId}:`, err.message);
+                                        }
+                                    }, 3000);
+                                });
+
+                                player.on('error', error => {
+                                    console.error(`AudioPlayer Error in guild ${guildId}:`, error.message);
+                                    setTimeout(() => {
+                                        try {
+                                            player.play(createHitRadioResource());
+                                        } catch (err) {
+                                            console.error(`Failed to recover in guild ${guildId}:`, err.message);
+                                        }
+                                    }, 3000);
+                                });
+
+                                player.play(createHitRadioResource());
+                                connection.subscribe(player);
+                                console.log(`Started playing in guild ${guildId}, channel ${channelId}`);
+                            })
+                            .catch(error => {
+                                console.error(`Failed to connect to voice in guild ${guildId}:`, error.message);
+                                if (!connectionDestroyed) {
+                                    connectionDestroyed = true;
+                                    try {
+                                        connection.destroy();
+                                    } catch (err) {}
+                                }
+                            });
+                    } catch (error) {
+                        if (error.code === 10004 || error.code === 10003) {
+                            removeChannel(guildId);
+                        }
+                        console.error(`Failed to rejoin channel ${channelId} in guild ${guildId}:`, error.message);
+                    }
+                }, delayMs);
+                delayMs += STAGGER_MS;
+            });
+        }, INITIAL_DELAY_MS);
 
         let index = 0;
         const statusMessages = config.statusMessages;
-        const intervalSeconds = config.statusInterval * 1000;
+        const intervalMs = (config.statusInterval || 30) * 1000;
 
         setInterval(() => {
-            if (index >= statusMessages.length) {
-                index = 0; // Reset to the first message if we've gone through all of them
-            }
+            if (index >= statusMessages.length) index = 0;
             client.user.setActivity(statusMessages[index], { type: ActivityType.Listening });
             index++;
-        }, intervalSeconds);
+        }, intervalMs);
     },
 };
