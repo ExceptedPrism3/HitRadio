@@ -5,7 +5,8 @@ const {
     createAudioResource,
     AudioPlayerStatus,
     VoiceConnectionStatus,
-    entersState
+    entersState,
+    StreamType,
 } = require('@discordjs/voice');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { saveChannel, removeChannel } = require('../utils/database');
@@ -13,9 +14,35 @@ const config = require('../config.json');
 
 const mp3_link = config.radioUrl;
 
+function waitForReady(connection, timeoutMs = 60e3) {
+    return new Promise((resolve, reject) => {
+        if (connection.state.status === VoiceConnectionStatus.Ready) {
+            resolve();
+            return;
+        }
+        const timeout = setTimeout(() => {
+            connection.removeListener(VoiceConnectionStatus.Ready, onReady);
+            connection.removeListener(VoiceConnectionStatus.Destroyed, onDestroyed);
+            reject(new Error('Voice connection timed out'));
+        }, timeoutMs);
+        const onReady = () => {
+            clearTimeout(timeout);
+            connection.removeListener(VoiceConnectionStatus.Destroyed, onDestroyed);
+            resolve();
+        };
+        const onDestroyed = () => {
+            clearTimeout(timeout);
+            connection.removeListener(VoiceConnectionStatus.Ready, onReady);
+            reject(new Error('Connection destroyed before ready'));
+        };
+        connection.once(VoiceConnectionStatus.Ready, onReady);
+        connection.once(VoiceConnectionStatus.Destroyed, onDestroyed);
+    });
+}
+
 function createHitRadioResource() {
     return createAudioResource(mp3_link, {
-        inputType: 'unknown',
+        inputType: StreamType.Arbitrary,
         inlineVolume: false
     });
 }
@@ -47,7 +74,11 @@ class Player {
             components.push(row);
         }
 
-        this.interaction.reply({ embeds: [embed], components: components, ephemeral: true });
+        const payload = { embeds: [embed], components };
+        if (this.interaction.deferred) {
+            return this.interaction.editReply(payload);
+        }
+        return this.interaction.reply({ ...payload, ephemeral: true });
     }
 
     checkUserInVoiceChannel() {
@@ -79,6 +110,8 @@ class Player {
 
         if (this.checkBotInVoiceChannel(userChannel)) return;
 
+        await this.interaction.deferReply({ ephemeral: true });
+
         console.log(`Attempting to join voice channel ${userChannel.id} in guild ${userChannel.guild.id}`);
 
         this.connection = joinVoiceChannel({
@@ -87,26 +120,19 @@ class Player {
             adapterCreator: userChannel.guild.voiceAdapterCreator,
         });
 
-        // Track connection state changes
-        // Track connection state changes
         this.connection.on('stateChange', async (oldState, newState) => {
             console.log(`Connection state changed: ${oldState.status} -> ${newState.status}`);
 
             if (newState.status === VoiceConnectionStatus.Disconnected) {
                 if (newState.reason === 4014 && newState.closeCode === 4014) {
-                    // Don't manually destroy, Discord handles this for channel moves
-                    // Wait for Reconnecting state
                     try {
                         await entersState(this.connection, VoiceConnectionStatus.Connecting, 20_000);
-                        // Probably moved voice channel
                     } catch {
-                        // Failed to reconnect, might have been kicked
                         if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
                             this.connection.destroy();
                         }
                     }
                 } else if (this.connection.rejoinAttempts < 15) {
-                    // unexpected disconnect, wait and try to reconnect (backoff improved)
                     await new Promise(resolve => setTimeout(resolve, (this.connection.rejoinAttempts + 1) * 2000));
                     this.connection.rejoin();
                     this.connection.rejoinAttempts++;
@@ -116,35 +142,26 @@ class Player {
                     }
                 }
             } else if (newState.status === VoiceConnectionStatus.Destroyed) {
-                // If destroyed unexpectedly (not by /stop), try to restart cycle
-                // Note: user.leaveChannel() calls destroy() manually, so we need to know if it was manual.
-                // For now, rely on persisted DB + pm2 restart if needed, or simple rejoin logic if we can detect it.
-                // Since we removed removeChannel from ready.js error handler, 
-                // simply letting it die allows the persistence to work on next ready() trigger or restart.
                 console.log('Voice connection destroyed.');
             } else if (newState.status === VoiceConnectionStatus.Connecting || newState.status === VoiceConnectionStatus.Signalling) {
                 this.connection.rejoinAttempts = 0;
             }
         });
 
-        // Only destroy on critical errors, not all errors
         this.connection.on('error', error => {
             console.error('VoiceConnection Error:', error.message);
-            // Don't auto-destroy on error, let it try to recover
         });
 
         saveChannel(userChannel.guild.id, userChannel.id);
 
         try {
             console.log('Waiting for connection to be ready...');
-            // Wait for the connection to be ready before playing audio
-            await entersState(this.connection, VoiceConnectionStatus.Ready, 30e3);
+            await waitForReady(this.connection, 60e3);
             console.log('Connection is ready, starting audio player...');
 
             const player = createAudioPlayer();
 
             player.on(AudioPlayerStatus.Idle, () => {
-                // Wait a bit before trying to play again to avoid spamming if the stream is dead
                 setTimeout(() => {
                     try {
                         const resource = createHitRadioResource();
@@ -157,16 +174,16 @@ class Player {
 
             player.on('error', error => {
                 console.error('AudioPlayer Error:', error.message);
-                // Try to recover by playing a new resource
-                try {
-                    const resource = createHitRadioResource();
-                    player.play(resource);
-                } catch (err) {
-                    console.error('Failed to recover from error:', err.message);
-                }
+                setTimeout(() => {
+                    try {
+                        const resource = createHitRadioResource();
+                        player.play(resource);
+                    } catch (err) {
+                        console.error('Failed to recover from error:', err.message);
+                    }
+                }, 3000);
             });
 
-            // Start playing
             const resource = createHitRadioResource();
             player.play(resource);
             this.connection.subscribe(player);
@@ -175,7 +192,6 @@ class Player {
             this.sendEmbed('#00FF00', 'Now playing the Hits 24/7!', '🎶');
         } catch (error) {
             console.error('Failed to play audio:', error.message);
-            console.error('Error details:', error);
             if (this.connection) {
                 this.connection.destroy();
             }
@@ -204,4 +220,4 @@ class Player {
     }
 }
 
-module.exports = { Player, mp3_link, createHitRadioResource };
+module.exports = { Player, mp3_link, createHitRadioResource, waitForReady };
