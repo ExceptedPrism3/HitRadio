@@ -47,9 +47,42 @@ function createHitRadioResource() {
     });
 }
 
+/**
+ * Discord voice can drop (522/521, gateway moves) while @discordjs/voice still
+ * holds a VoiceConnection — then /play says "already playing" with no bot in VC.
+ * If the gateway says we are not in a channel (or we're in a different one),
+ * destroy the stale connection so commands work again.
+ */
+function pruneStaleVoiceConnection(guild) {
+    const connection = getVoiceConnection(guild.id);
+    if (!connection || connection.state.status === VoiceConnectionStatus.Destroyed) {
+        return;
+    }
+
+    const botVoiceChannelId = guild.members.me?.voice?.channelId ?? null;
+
+    if (botVoiceChannelId === null) {
+        try {
+            connection.destroy();
+        } catch (_) {
+            /* noop */
+        }
+        return;
+    }
+
+    if (connection.joinConfig.channelId !== botVoiceChannelId) {
+        try {
+            connection.destroy();
+        } catch (_) {
+            /* noop */
+        }
+    }
+}
+
 class Player {
     constructor(interaction) {
         this.interaction = interaction;
+        pruneStaleVoiceConnection(interaction.guild);
         this.connection = getVoiceConnection(interaction.guild.id);
         if (this.connection) {
             this.connection.rejoinAttempts = 0;
