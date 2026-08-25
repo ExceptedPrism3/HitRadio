@@ -1,127 +1,114 @@
-# HitRadio
-
-<img src="https://cdn.discordapp.com/attachments/947328978857898016/951591067642372176/HitRadioReadMe.gif">
-
-![Python](https://img.shields.io/badge/Python-3.11-purple.svg)
-![Discord.py](https://img.shields.io/badge/discord.py-v2.3.2-blue.svg)
-
-<br>
-
-24/7 Moroccan Discord Bot named HitRadio, inspired by the **HitRadio** Radio Station, now offers a more interactive and feature-rich experience. Listen to your favorite tunes in real-time on your voice channel with friends. Enjoy a variety of new commands and enhanced functionality, including volume control, bot information, and more.
-
-Invite HitRadio to your server and enhance your Discord experience with uninterrupted Hits.
-
-<br>
-
-You can find this bot <a href="https://top.gg/bot/1086030727650476153"><b>here</b></a>, or you invite it directly from <a href="https://discord.com/api/oauth2/authorize?client_id=1086030727650476153&permissions=277062450240&scope=bot%20applications.commands"><b>here</b></a>.
-
-<br>
-
-Execute `/help` of the bot in Discord to view all available commands!
-
-<br>
+# 📻 HitRadio Discord Bot
 
 <p align="center">
-<img src="https://cdn.discordapp.com/attachments/934424188582780975/1195054451417960588/image.png?ex=65b29830&is=65a02330&hm=ad8a789e3c8dfcb9468023b2c18f8e01da419eedd7fff458fcc8cae217aa0803&"/>
+  <img src="https://img.shields.io/badge/Python-3.10%20%7C%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python Version" />
+  <img src="https://img.shields.io/badge/discord.py-v2.3+-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="discord.py" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
 </p>
 
-<br>
+A dedicated 24/7 Moroccan Discord Radio Bot streaming live **Hit Radio** with crystal-clear audio quality, automatic crash recovery, volume controls, and modern slash commands.
 
-## 🌟 Features
+---
 
-- **24/7 Radio Streaming**: Enjoy uninterrupted HitRadio streaming in your Discord server.
-- **Interactive Commands**: Use /play, /volume, and more for a complete music experience.
-- **Auto-Reconnect**: Robust handling of bot restarts and crashes, ensuring continuous streaming.
-- **User-Friendly Interface**: Simple and intuitive commands for all users.
-- **Multiple Bot Support**: Explore other bots created by the same developer, with direct invite links.
+## 🌟 Key Features
 
-<br>
+* 🎶 **24/7 Uninterrupted Streaming**: Connects directly to Hit Radio's high-bitrate live audio stream.
+* 🔄 **Auto-Recovery & Persistence**: Remembers connected channels across restarts/crashes with SQLite and auto-reconnects.
+* 🔍 **Stream Watchdog**: Periodically checks stream health and self-heals in case of stream dropouts.
+* 🔊 **Dynamic Volume Control**: Real-time volume scaling (1% – 100%) via PCM transformation.
+* ⚡ **Full Slash Command Suite**: Seamless user experience with Discord Application Commands and interactive UI buttons.
+* 🛡️ **Global Error Handling**: Clear, user-friendly responses for missing permissions or connection errors.
 
-## 🚀 Prequesitive
-- Brain (Optional xD)
-- Python 3.10 or higher
-- Internet
+---
 
-<br>
+## 🛠️ Slash Commands
 
-## ⚙️ Installation
+| Command | Description |
+| :--- | :--- |
+| `/play` | Join your voice channel and stream Hit Radio live |
+| `/pause` | Pause radio playback |
+| `/resume` | Resume paused playback |
+| `/volume <1-100>` | Adjust the radio volume in your channel |
+| `/leave` | Disconnect the bot from the voice channel |
+| `/info` | View bot statistics, invite link, and sister bots |
+| `/vote` | Support HitRadio with a vote on Top.gg |
+| `/ping` | Check WebSocket gateway latency |
+| `/uptime` | Display elapsed bot uptime |
+| `/help` | Interactive command menu and usage guide |
 
-1- Clone this repository.
+---
+
+## 🚀 Quick Setup & Installation
+
+### 1. Prerequisites
+* Python **3.10** or higher
+* [FFmpeg](https://ffmpeg.org/download.html) installed on your system PATH:
+  ```bash
+  # macOS
+  brew install ffmpeg
+
+  # Ubuntu/Debian
+  sudo apt-get install ffmpeg
+  ```
+
+### 2. Clone the Repository
 ```bash
 git clone https://github.com/ExceptedPrism3/HitRadio.git
+cd HitRadio
 ```
 
-⚠️ **You must have "git" installed on your machine first to be able to use this command**.
-
-<br>
-2- Download & Install the packages from the requirements.txt file:
-
+### 3. Install Dependencies
 ```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-<br>
-3- Create a folder named `private` in the project root and access it.
-
+### 4. Configure Environment
+Copy the `.env.example` template:
 ```bash
-mkdir private
-cd private
+cp .env.example .env
 ```
-<br>
-4- Create a python file called <b>essentials.py</b> and write into it the following
-
-```bash
-echo "BOT_OWNER_ID = Owner_of_the_Bot_ID
-
-BOT_TOKEN = 'Bot_Token'
-
-BOT_STATUS = ['Your_status', 'example']
-
-STREAM_LINK = 'https://hitradio-maroc.ice.infomaniak.ch/hitradio-maroc-128.mp3'
-
-BOT_INVITE = 'Bot_Invite_Link'
-
-VOTE = 'Top_GG_vote_link_or_any_other_vote_site'
-
-INVITE_LINK = 'discord_support_invite_link'
-
-OTHER_BOT_ENABLED = False
-
-OTHER_BOT_1 = 'INVITE_LINK_1'
-OTHER_BOT_2 = 'INVITE_LINK_2'" > essentials.py
+Edit `.env` and provide your **Discord Bot Token**:
+```env
+DISCORD_TOKEN=your_actual_discord_token_here
+STREAM_URL=https://hitradio-maroc.ice.infomaniak.ch/hitradio-maroc-128.mp3
 ```
 
-<br>
-5- Go back to the root of the project and execute the following command:
-
+### 5. Launch the Bot
 ```bash
-cd ..
-python main.py
+python3 bot.py
 ```
 
-<br>
+---
 
-## 🌐 Extra Features
-Enhance your bot's capabilities by integrating additional bots you own. To showcase your other creations when users
-execute the /info command, simply enable the OTHER_BOT_ENABLED option found in the essentials.py file within the private
-folder and insert the bot's invite links bellow it. This feature allows you to cross-promote and increase visibility
-for all your Discord bots, creating a more engaging and diverse experience for your users.
+## 📁 Architecture Overview
 
-### 🎉 **Enjoy 24/7 Hits with HitRadio!**
-<br>
+```
+HitRadio/
+├── bot.py                     # Bot initialization, intent configuration & cog loader
+├── config.py                  # Typed environment configuration
+├── requirements.txt           # Python dependencies
+├── .env.example               # Configuration template
+├── cogs/
+│   ├── music.py               # Playback controls (/play, /pause, /resume, /volume, /leave)
+│   ├── general.py             # Informational commands (/info, /help, /ping, /uptime, /vote)
+│   ├── events.py              # Startup, presence rotation, reconnects & stream watchdog
+│   └── errors.py              # Application command error handling
+├── db/
+│   └── database.py            # SQLite asynchronous voice state storage
+└── utils/
+    ├── voice.py               # FFmpeg stream generation & voice connection logic
+    └── stream_check.py        # Stream health watchdog
+```
+
+---
+
+## 📜 Changelog
+See [CHANGELOG.md](CHANGELOG.md) for detailed release notes and version history.
+
+---
 
 ## 📄 License
+This project is licensed under the [MIT License](LICENSE).
 
-This project is under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## ✉️ Support
-
-Need help? Join our [Discord Support Server](https://discord.com/invite/MfR5mcpVfX).
-<br>
-
-## 🤝 Contributing
-Contributions are welcome! For major changes, please open an issue or a ticket first to discuss what you would like to change.
-<br>
-
-## ❤️ Special Thanks
-A heartfelt thanks to a [Friend](https://github.com/redmoogle) for their invaluable support and assistance throughout the development of this project.

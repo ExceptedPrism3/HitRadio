@@ -1,0 +1,1 @@
+"""HitRadio Cogs package."""
