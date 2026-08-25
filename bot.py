@@ -16,9 +16,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger("HitRadio")
 
-# Initialize Discord Intents
+# Initialize Discord Intents (Standard default intents without privileged requirements)
 intents = discord.Intents.default()
-intents.message_content = True  # Used for detecting bot mention replies
+
 
 class HitRadioBot(commands.Bot):
     def __init__(self):
