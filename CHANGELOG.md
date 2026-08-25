@@ -14,8 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Modular Cog Architecture**: Organized codebase into clean domain cogs (`cogs/music.py`, `cogs/general.py`, `cogs/events.py`, `cogs/errors.py`).
 - **Interactive Discord UI Views**: Added buttons for Invite, Support Server, Top.gg Vote, and Sister Bots cross-promotion (`JazzRadio`, `DiscoBot`).
 - **Global Error Handling**: Introduced `cogs/errors.py` with user-friendly ephemeral embeds for missing permissions, cooldowns, and check failures.
-- **Stream Health Watchdog**: Added `utils/stream_check.py` running an asynchronous loop that probes stream connectivity and automatically recovers stalled playback.
-- **Opus & FFmpeg Optimization**: Added auto-reconnect parameters (`-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5`) and Opus voice verification.
+- **Proactive 24/7 Auto-Recovery Watchdog**: Upgraded `utils/stream_check.py` to continuously inspect all saved guild voice states and automatically reconnect the bot if Discord drops the voice connection (e.g. server maintenance, RTC region shifts, or inactivity).
+- **Persistent Channel State Protection**: Prevented premature state deletion on transient voice disconnects; channel state is now strictly retained until explicit `/leave` invocation or channel deletion.
+- **Opus & FFmpeg Optimization**: Added auto-reconnect parameters (`-nostdin -reconnect 1 -reconnect_streamed 1 -reconnect_at_eof 1 -reconnect_delay_max 5`) and Opus voice verification.
 - **Security & Git Hygiene**: Added `.gitignore` and `.env.example` to prevent committing secrets, databases, or local virtual environments.
 - **Automated Verification Suite**: Added test suite validating configuration, database CRUD, stream health probe, and dynamic cog registration.
 
