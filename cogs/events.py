@@ -61,7 +61,7 @@ class Events(commands.Cog):
         # Auto-reconnect to saved voice channels from previous session
         await self.restore_saved_voice_connections()
 
-        # Start stream health watchdog if not already running
+        # Start proactive 24/7 stream health watchdog if not already running
         if self.stream_task is None or self.stream_task.done():
             self.stream_task = asyncio.create_task(stream_check.check_stream_loop(self.bot))
 
@@ -79,7 +79,7 @@ class Events(commands.Cog):
                     continue
 
                 channel = guild.get_channel(channel_id)
-                if isinstance(channel, discord.VoiceChannel):
+                if isinstance(channel, (discord.VoiceChannel, discord.StageChannel)):
                     logger.info(f"Reconnecting to '{channel.name}' in guild '{guild.name}'...")
                     await voice.join_and_play(channel, guild)
                     await asyncio.sleep(1.0)  # Rate-limit safety pause between reconnects
@@ -88,23 +88,38 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
-        """Tracks bot voice state changes to keep database records synchronized."""
+        """Tracks bot voice state changes without erasing 24/7 channel memory on drops."""
         if member != self.bot.user:
             return
 
-        # Case 1: Bot left or was kicked from a voice channel
+        # Case 1: Temporary disconnect or server migration
+        # Note: Do NOT erase the channel from database! The watchdog will auto-recover it.
         if before.channel and not after.channel:
-            logger.info(f"Bot disconnected from '{before.channel.name}' in '{before.channel.guild.name}'.")
-            await database.remove_state(before.channel.guild.id)
+            logger.warning(f"Bot voice connection dropped from '{before.channel.name}' in '{before.channel.guild.name}'. The 24/7 watchdog will restore it.")
 
-        # Case 2: Bot was moved to another channel
+        # Case 2: Bot was moved to another channel within the guild
         elif after.channel and before.channel != after.channel:
-            logger.info(f"Bot moved to '{after.channel.name}' in '{after.channel.guild.name}'.")
+            logger.info(f"Bot moved to '{after.channel.name}' in '{after.channel.guild.name}'. Updating saved state.")
             await database.save_state(after.channel.guild.id, after.channel.id)
-            # Ensure stream continues playing in the new channel
             await asyncio.sleep(0.5)
-            if not after.channel.guild.voice_client.is_playing():
+            if after.channel.guild.voice_client and not after.channel.guild.voice_client.is_playing():
                 await voice.play_audio(after.channel.guild.voice_client)
+
+    @commands.Cog.listener()
+    async def on_guild_channel_delete(self, channel: discord.abc.GuildChannel):
+        """Clean up saved voice state if the voice channel was deleted."""
+        if isinstance(channel, (discord.VoiceChannel, discord.StageChannel)):
+            saved_channels = await database.get_saved_channels()
+            for guild_id, channel_id in saved_channels:
+                if channel.id == channel_id:
+                    logger.info(f"Channel '{channel.name}' ({channel.id}) was deleted. Removing state.")
+                    await database.remove_state(guild_id)
+
+    @commands.Cog.listener()
+    async def on_guild_remove(self, guild: discord.Guild):
+        """Clean up saved voice state if the bot is removed/kicked from a guild."""
+        logger.info(f"Bot was removed from guild '{guild.name}' ({guild.id}). Cleaning up state.")
+        await database.remove_state(guild.id)
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):

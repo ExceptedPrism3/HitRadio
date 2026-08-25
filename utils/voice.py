@@ -8,9 +8,10 @@ import config
 logger = logging.getLogger(__name__)
 
 FFMPEG_OPTIONS = {
-    'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
+    'before_options': '-nostdin -reconnect 1 -reconnect_streamed 1 -reconnect_at_eof 1 -reconnect_delay_max 5',
     'options': '-vn'
 }
+
 
 def create_audio_source(stream_url: str = config.STREAM_URL, volume: float = 1.0) -> discord.PCMVolumeTransformer:
     """Creates a FFmpeg audio source wrapped in a PCM volume transformer."""
