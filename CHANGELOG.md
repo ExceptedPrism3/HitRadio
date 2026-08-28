@@ -7,7 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [4.1.0] - 2026-08-28
+
+### Added
+- **Intelligent Permission Validation & Backoff**: Added pre-connection permission checks (`CONNECT`, `SPEAK`, `VIEW_CHANNEL`) in `utils/stream_check.py` with exponential backoff on restricted channels, preventing continuous 20-second timeout loops.
+- **Optimized FFmpeg Streaming Headers**: Added `-headers "User-Agent: HitRadioDiscordBot/4.0\r\n"`, `-analyzeduration 0`, and `-probesize 32768` to eliminate stream buffering delays and prevent Icecast edge servers from dropping audio buffers.
+- **Automated Memory Cleanup**: Integrated periodic garbage collection (`gc.collect()`) in the watchdog loop to keep long-running memory usage consistently below ~50MB.
+
+### Changed
+- **Non-Disruptive Audio Restarts**: Stream health recovery now restarts only the audio player (`restart_audio_stream`) without disconnecting from the Discord voice channel, preserving continuous call duration and voice session stability.
+
+### Fixed
+- **Voice Handshake Collision Prevention**: Upgraded `connect_to_voice` to clean up half-open/stale voice connections before opening new sockets, eliminating `The voice handshake is being terminated` collision errors during Discord voice server migrations.
+
+---
+
 ## [4.0.0] - 2026-08-25
+
 
 ### Added
 - **Dynamic Configuration System**: Created `config.py` with typed `.env` variables and fallback defaults via `python-dotenv`.
