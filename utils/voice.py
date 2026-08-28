@@ -8,13 +8,21 @@ import config
 logger = logging.getLogger(__name__)
 
 FFMPEG_OPTIONS = {
-    'before_options': '-nostdin -reconnect 1 -reconnect_streamed 1 -reconnect_at_eof 1 -reconnect_delay_max 5',
+    'before_options': (
+        '-nostdin '
+        '-reconnect 1 '
+        '-reconnect_streamed 1 '
+        '-reconnect_at_eof 1 '
+        '-reconnect_delay_max 5 '
+        '-analyzeduration 0 '
+        '-probesize 32768 '
+        '-headers "User-Agent: HitRadioDiscordBot/4.0\r\n"'
+    ),
     'options': '-vn'
 }
 
-
 def create_audio_source(stream_url: str = config.STREAM_URL, volume: float = 1.0) -> discord.PCMVolumeTransformer:
-    """Creates a FFmpeg audio source wrapped in a PCM volume transformer."""
+    """Creates a resilient FFmpeg audio source wrapped in a PCM volume transformer."""
     audio_source = discord.FFmpegPCMAudio(stream_url, **FFMPEG_OPTIONS)
     return discord.PCMVolumeTransformer(audio_source, volume=volume)
 
@@ -22,16 +30,16 @@ def handle_playback_error(error: Optional[Exception], voice_client: discord.Voic
     """Callback triggered if FFmpeg stream encounters an error or ends unexpectedly."""
     if error:
         logger.error(f"FFmpeg audio playback error in guild {voice_client.guild.id}: {error}")
-    
-    # If the bot is still connected and not intentionally stopped, attempt stream restart
+
+    # If the bot is still in voice and not intentionally stopped/paused, seamlessly restart the stream
     if voice_client and voice_client.is_connected() and not voice_client.is_playing() and not voice_client.is_paused():
-        logger.info(f"Attempting to auto-recover stream in guild {voice_client.guild.name} ({voice_client.guild.id})...")
+        logger.info(f"Auto-restarting audio stream in '{voice_client.guild.name}' ({voice_client.guild.id})...")
         try:
             loop = voice_client.client.loop
             if loop.is_running():
                 asyncio.run_coroutine_threadsafe(restart_audio_stream(voice_client.guild), loop)
         except Exception as ex:
-            logger.error(f"Failed to trigger auto-recovery task: {ex}")
+            logger.error(f"Failed to trigger stream restart task: {ex}")
 
 async def play_audio(voice_client: discord.VoiceClient, stream_url: str = config.STREAM_URL, volume: float = 1.0) -> bool:
     """Starts playback of the radio stream on the given voice client."""
@@ -51,7 +59,7 @@ async def play_audio(voice_client: discord.VoiceClient, stream_url: str = config
         return False
 
 async def restart_audio_stream(guild: discord.Guild, stream_url: str = config.STREAM_URL) -> None:
-    """Restarts playback in the guild's current voice channel, preserving volume settings."""
+    """Restarts playback in the guild's current voice channel without disconnecting."""
     voice_client = guild.voice_client
     if voice_client and voice_client.is_connected():
         current_volume = 1.0
@@ -59,11 +67,16 @@ async def restart_audio_stream(guild: discord.Guild, stream_url: str = config.ST
             current_volume = voice_client.source.volume
 
         voice_client.stop()
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.3)
         await play_audio(voice_client, stream_url=stream_url, volume=current_volume)
 
 async def connect_to_voice(channel: discord.VoiceChannel, guild: discord.Guild) -> Optional[discord.VoiceClient]:
-    """Connects or moves the bot to a voice channel with safety checks."""
+    """Connects or moves the bot to a voice channel with safety, permission, and state validation."""
+    permissions = channel.permissions_for(guild.me)
+    if not permissions.connect or not permissions.speak:
+        logger.warning(f"Cannot connect to '{channel.name}' in '{guild.name}': Missing Connect or Speak permissions.")
+        return None
+
     voice_client = guild.voice_client
 
     try:
@@ -71,13 +84,24 @@ async def connect_to_voice(channel: discord.VoiceChannel, guild: discord.Guild) 
             if voice_client.channel != channel:
                 await voice_client.move_to(channel)
             return voice_client
+        elif voice_client and not voice_client.is_connected():
+            # Clean up stale/half-closed connection to prevent handshake collisions
+            try:
+                await voice_client.disconnect(force=True)
+            except Exception:
+                pass
+            await asyncio.sleep(0.5)
+            return await channel.connect(timeout=15.0, reconnect=True)
         else:
-            return await channel.connect(timeout=20.0, reconnect=True)
+            return await channel.connect(timeout=15.0, reconnect=True)
+    except asyncio.TimeoutError:
+        logger.warning(f"Timeout connecting to voice channel '{channel.name}' in '{guild.name}'.")
+        return None
     except discord.ClientException as e:
-        logger.error(f"ClientException connecting to {channel.name}: {e}")
+        logger.error(f"ClientException connecting to '{channel.name}': {e}")
         return None
     except Exception as e:
-        logger.error(f"Unexpected error connecting to {channel.name}: {e}")
+        logger.error(f"Unexpected error connecting to '{channel.name}': {e}")
         return None
 
 async def join_and_play(channel: discord.VoiceChannel, guild: discord.Guild, stream_url: str = config.STREAM_URL) -> Optional[discord.VoiceClient]:
